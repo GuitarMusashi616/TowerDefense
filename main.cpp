@@ -2,6 +2,8 @@
 #include <iostream>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <ResourcePath.hpp>
+
 using std::cout;
 using std::cin;
 using std::endl;
@@ -15,8 +17,8 @@ int main()
 
 	//load textures
 	sf::Texture t1, t2;
-	t1.loadFromFile("GrassTrack.png");
-	t2.loadFromFile("ship.png");
+	t1.loadFromFile(resourcePath() + "GrassTrack.png");
+	t2.loadFromFile(resourcePath() + "ship.png");
 	sf::Sprite background{ t1 }, ship{ t2 };
 	
 
