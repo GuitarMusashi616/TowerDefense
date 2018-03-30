@@ -3,12 +3,9 @@
 #include <vector>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-<<<<<<< HEAD
 #include "Mob.h"
-=======
 #include <ResourcePath.hpp>
 
->>>>>>> 6ce7fad2b5950a5c4e896541419711f2d30c57bc
 using std::cout;
 using std::cin;
 using std::endl;
@@ -20,18 +17,10 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(680, 500), "SFML window");
 
 	//load textures
-<<<<<<< HEAD
 	sf::Texture t1, t2, t3;
-	t1.loadFromFile("GrassTrack.png");
-	t2.loadFromFile("ship.png");
-	sf::Sprite background{ t1 };
-=======
-	sf::Texture t1, t2;
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "ship.png");
-	sf::Sprite background{ t1 }, ship{ t2 };
-	
->>>>>>> 6ce7fad2b5950a5c4e896541419711f2d30c57bc
+	sf::Sprite background{ t1 };
 
 	//stuff for keeping track of time
 	sf::Clock timer;    
