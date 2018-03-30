@@ -8,7 +8,6 @@ Mob::Mob(const sf::Texture &texture, const coord &position, int health, int spee
 {
 }
 
-
 Mob::~Mob()
 {
 }
