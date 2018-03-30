@@ -18,8 +18,8 @@ int main()
 
 	//load textures
 	sf::Texture t1, t2, t3;
-	t1.loadFromFile(resourcePath() + "GrassTrack.png");
-	t2.loadFromFile(resourcePath() + "ship.png");
+	t1.loadFromFile(resourcePath() + "/Resources/GrassTrack.png");
+	t2.loadFromFile(resourcePath() + "/Resources/ship.png");
 	sf::Sprite background{ t1 };
 
 	//stuff for keeping track of time
