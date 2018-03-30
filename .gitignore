@@ -4,6 +4,9 @@
 # plist Files
 *.plist
 
+# Xcode Project Files
+*.xcodeproj
+
 # Compiled Object files
 *.slo
 *.lo
