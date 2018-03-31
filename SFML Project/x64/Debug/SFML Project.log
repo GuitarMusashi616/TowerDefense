@@ -1,3 +1,0 @@
-﻿  game.cpp
-c:\users\austinwilliams\source\repos\sfml project\sfml project\game.cpp(17): warning C4101: 'event': unreferenced local variable
-  SFML Project.vcxproj -> C:\Users\AustinWilliams\source\repos\SFML Project\x64\Debug\SFML Project.exe

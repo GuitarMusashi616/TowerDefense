@@ -50,6 +50,7 @@ int GameScreen::run(sf::RenderWindow &app) {
         {453,306},
         {462,375},
         {630,377},
+		{500,500},
     };
 
 	vector<Mob*> mobsThisRound{
@@ -107,7 +108,9 @@ int GameScreen::run(sf::RenderWindow &app) {
         //draw to buffer
         app.draw(background);
 		for (auto mob : mobsThisRound) {
-			app.draw(mob->getSprite());
+			if (mob->getHealth() > 0) {
+				app.draw(mob->getSprite());
+			}
 		}
         
         // Update the window

@@ -28,7 +28,10 @@ sf::Vector2f Mob::nextPosition(std::vector<coord> &coords)
 	else if (coords[_positionKey].y < _position.y) {
 		_position.y -= 1;
 	}
-	if (coords[_positionKey].x == _position.x && coords[_positionKey].y == _position.y) {
+	if (_positionKey == coords.size()-1) {
+		this->setHealth(0);
+	}
+	else if (coords[_positionKey].x == _position.x && coords[_positionKey].y == _position.y) {
 		_positionKey++;
 	}
 	return sf::Vector2f{ float(_position.x),float(_position.y) };
@@ -44,6 +47,21 @@ void Mob::setPosition(const sf::Vector2f &moveTo)
 {
 	//moves the sprite
 	_sprite.setPosition(moveTo);
+}
+
+void Mob::setHealth(int health)
+{
+	_health = health;
+}
+
+coord Mob::getPosition() const
+{
+	return _position;
+}
+
+int Mob::getHealth() const
+{
+	return _health;
 }
 
 //std::unique_ptr<Mob> mobFactory(char c, sf::Texture texture)

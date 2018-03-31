@@ -13,7 +13,6 @@ struct coord {
 	int x;
 	int y;
 };
-
 class Mob
 {
 public:
@@ -23,6 +22,10 @@ public:
 	sf::Vector2f nextPosition(std::vector<coord> &);
 	sf::Sprite &getSprite();
 	void setPosition(const sf::Vector2f &moveTo);
+	void setHealth(int health);
+	coord getPosition() const;
+	int getHealth() const;
+
 protected:
 	int _health;
 	int _speed;
