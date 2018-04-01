@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector> 
  
-//#include "ResourcePath.hpp"
+#include "ResourcePath.hpp"
 #include "Mob.h"
 #include "MobTypes.h"
 #include "game.hpp"
@@ -21,8 +21,8 @@ int GameScreen::run(sf::RenderWindow &app) {
 
 	//load textures
 	sf::Texture t1, t2, t3;
-	t1.loadFromFile("GrassTrack.png");
-	t2.loadFromFile("ship.png");
+	t1.loadFromFile(resourcePath() + "GrassTrack.png");
+	t2.loadFromFile(resourcePath() + "ship.png");
 	sf::Sprite background{ t1 };
 
 	//stuff for keeping track of time
