@@ -21,8 +21,13 @@ int GameScreen::run(sf::RenderWindow &app) {
 
 	//load textures
 	sf::Texture t1, t2, t3;
+<<<<<<< HEAD
 	t1.loadFromFile(resourcePath() + "Resources/GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "Resources/ship.png");
+=======
+	t1.loadFromFile(resourcePath() + "GrassTrack.png");
+	t2.loadFromFile(resourcePath() + "ship.png");
+>>>>>>> a9fcd4d419b2aeedce3b0b6514585e52a93f963b
 	sf::Sprite background{ t1 };
 
 	//stuff for keeping track of time
