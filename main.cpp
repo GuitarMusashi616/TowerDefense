@@ -25,6 +25,8 @@ int main()
 {
 	// Create the main window
 	sf::RenderWindow window(sf::VideoMode(680, 500), "SFML window");
+	window.setFramerateLimit(25);
+
     //cout << resourcePath();
     std::vector<Screens*> screens;
     MenuScreen screen0;
