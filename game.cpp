@@ -1,15 +1,18 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector> 
- 
-//#include "ResourcePath.hpp"
+#include <memory>
+
+#include "ResourcePath.hpp"
 #include "Mob.h"
 #include "MobTypes.h"
 #include "game.hpp"
+#include "grid.hpp"
 
 using std::vector;
 using std::cout;
 using std::endl;
+using std::shared_ptr;
 
 
 
@@ -19,12 +22,32 @@ int GameScreen::run(sf::RenderWindow &app) {
 	sf::Event event;
 	bool running = true;
 
+    //Initialize static activated member of tile
+        
 	//load textures
 	sf::Texture t1, t2, t3;
-	t1.loadFromFile("GrassTrack.png");
-	t2.loadFromFile("ship.png");
+	t1.loadFromFile(resourcePath() + "GrassTrack.png");
+	t2.loadFromFile(resourcePath() + "ship.png");
 	sf::Sprite background{ t1 };
 
+    //Load square
+    int tileSize = 20;
+
+    int xSize = app.getSize().x / tileSize;
+    int ySize = app.getSize().y / tileSize;
+    
+    cout << "X SIZE: " << xSize << endl;
+    cout << "Y SIZE: " << ySize << endl;
+    Grid grid(xSize, ySize, tileSize);
+    
+    
+    
+    
+    
+    sf::RectangleShape rectangle(sf::Vector2f(50, 50));
+    sf::Color transparentRed(255, 0, 0, 100);
+    rectangle.setFillColor(transparentRed);
+    
 	//stuff for keeping track of time
 	sf::Clock timer;
 	auto lastTime = sf::Time::Zero;
@@ -93,25 +116,37 @@ int GameScreen::run(sf::RenderWindow &app) {
 				mobsThisRound.push_back( mobFactory('s',t2) );
 			}
             
-            //DEBUG: figure out pixel x,y,z location of click
-            if (event.type == sf::Event::MouseButtonPressed) {
-                
+            if(event.type == sf::Event::MouseMoved) {
                 int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
-                cout << x << ", " << y << endl;
-                shipMob.setPosition(sf::Vector2f{ float(x), float(y) });
+                
+                shared_ptr<Tile> tileClicked = grid.getTile(x, y);
+                tileClicked->setActivated();
             }
-            
         }
         // Clear screen
         app.clear();
         
-        //draw to buffer
+        //draw Background
         app.draw(background);
-		for (auto mob : mobsThisRound) {
-			if (mob->getHealth() > 0) {
-				app.draw(mob->getSprite());
-			}
-		}
+    
+        //Draw active tile
+        std::vector<std::vector<shared_ptr<Tile>>> tileGrid = grid.getTiles();
+        for(auto y = 0; y < tileGrid.size(); y++) {
+            for(auto x = 0; x < tileGrid[y].size(); x++)
+            {
+                shared_ptr<Tile> toDraw = grid.getTiles()[y][x];
+                sf::RectangleShape rect = toDraw->getTile();
+                rect.setPosition((float) toDraw->getPosition().x, (float) toDraw->getPosition().y);
+                if(toDraw->isActivated()) app.draw(rect);
+            }
+        }
+        
+        // Draw Mobs
+        for (auto mob : mobsThisRound) {
+            if (mob->getHealth() > 0) {
+                app.draw(mob->getSprite());
+            }
+        }
         
         // Update the window
         app.display();

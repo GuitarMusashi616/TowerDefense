@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-//#include "ResourcePath.hpp"
+#include "ResourcePath.hpp"
 #include "menu.hpp"
 
 using std::cout;
@@ -16,7 +16,7 @@ int MenuScreen::run(sf::RenderWindow &app) {
     //load textures
     
     sf::Texture t1;
-    t1.loadFromFile("MenuScreen.png");
+    t1.loadFromFile(resourcePath() + "MenuScreen.png");
     sf::Sprite background{ t1 };
 
     while(running) {
