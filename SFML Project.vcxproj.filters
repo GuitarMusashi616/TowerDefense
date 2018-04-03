@@ -52,10 +52,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\GrassTrack.png">
+    <Image Include="Resources\MenuScreen.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\MenuScreen.png">
+    <Image Include="Resources\GrassTrack.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Resources\ship.png">
