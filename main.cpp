@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Mob.h"
 
+#include "Tower.hpp"
 #include "ResourcePath.hpp"
 #include <string>
 

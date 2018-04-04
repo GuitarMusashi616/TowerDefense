@@ -10,6 +10,7 @@
 #include "game.hpp"
 #include "grid.hpp"
 #include "tile.hpp"
+#include "Tower.hpp"
 
 using std::vector;
 using std::cout;
@@ -49,6 +50,10 @@ int GameScreen::run(sf::RenderWindow &app) {
     sf::Color transparentRed(255, 0, 0, 100);
     rectangle.setFillColor(transparentRed);
     
+	// goomba tower
+	sf::Texture t4;
+	t4.loadFromFile(resourcePath() + "goombaTower.png",sf::IntRect(5,7,32,80));
+
 	//stuff for keeping track of time
 	sf::Clock timer;
 	auto lastTime = sf::Time::Zero;
@@ -77,12 +82,15 @@ int GameScreen::run(sf::RenderWindow &app) {
 		{500,500},
     };
 
+	// List of mobs this round both alive and dead (cleared every round)
 	vector<Mob*> mobsThisRound{
 		//&shipMob,
 		//&shipMob2,
 	};
 
-	//List of mobs this round both alive and dead (cleared every round)
+	// List of towers added this round
+	vector<Tower*> towersThisRound{};
+
     // Start the game loop
     while (app.isOpen())
     {
@@ -113,6 +121,7 @@ int GameScreen::run(sf::RenderWindow &app) {
                 app.close();
             }
 
+			// Tab pressed: place mob
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab) {
 				mobsThisRound.push_back( mobFactory('s',t2) );
 			}
@@ -120,9 +129,25 @@ int GameScreen::run(sf::RenderWindow &app) {
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
                 showTile = !showTile;
             }
-            if(event.type == sf::Event::Resized) {
+            
+            if(event.type == sf::Event::Resized)
+            {
                 //resizeView(app, view);
                 cout << "Resized" << endl;
+            }
+        
+			// LShift pressed: place tower on mouse cursor
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
+				cout << sf::Mouse::getPosition(app).x << "," << sf::Mouse::getPosition(app).y << endl;
+				towersThisRound.push_back(towerFactory(t4, { sf::Mouse::getPosition(app).x - 15 , sf::Mouse::getPosition(app).y - 40}));
+			}
+
+            //DEBUG: figure out pixel x,y,z location of click
+            if (event.type == sf::Event::MouseButtonPressed) {
+                
+                int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
+                cout << x << ", " << y << endl;
+                shipMob.setPosition(sf::Vector2f{ float(x), float(y) });
             }
             
             if(event.type == sf::Event::MouseMoved) {
@@ -164,6 +189,11 @@ int GameScreen::run(sf::RenderWindow &app) {
             }
         }
         
+		// draw towers
+		for (auto tower : towersThisRound) {
+			tower->setPosition();
+			app.draw(tower->getSprite());
+		}
         // Update the window
         app.display();
     }
