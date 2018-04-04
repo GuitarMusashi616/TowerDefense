@@ -6,6 +6,7 @@
 #include "Mob.h"
 #include "MobTypes.h"
 #include "game.hpp"
+#include "Tower.hpp"
 
 using std::vector;
 using std::cout;
@@ -21,14 +22,15 @@ int GameScreen::run(sf::RenderWindow &app) {
 
 	//load textures
 	sf::Texture t1, t2, t3;
-<<<<<<< HEAD
 	t1.loadFromFile(resourcePath() + "Resources/GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "Resources/ship.png");
-=======
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "ship.png");
->>>>>>> a9fcd4d419b2aeedce3b0b6514585e52a93f963b
 	sf::Sprite background{ t1 };
+
+	// goomba tower
+	sf::Texture t4;
+	t4.loadFromFile(resourcePath() + "Resources/goombaTower.png",sf::IntRect(5,7,32,80));
 
 	//stuff for keeping track of time
 	sf::Clock timer;
@@ -58,12 +60,15 @@ int GameScreen::run(sf::RenderWindow &app) {
 		{500,500},
     };
 
+	// List of mobs this round both alive and dead (cleared every round)
 	vector<Mob*> mobsThisRound{
 		//&shipMob,
 		//&shipMob2,
 	};
 
-	//List of mobs this round both alive and dead (cleared every round)
+	// List of towers added this round
+	vector<Tower*> towersThisRound{};
+
     // Start the game loop
     while (app.isOpen())
     {
@@ -94,10 +99,17 @@ int GameScreen::run(sf::RenderWindow &app) {
                 app.close();
             }
 
+			// Tab pressed: place mob
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab) {
 				mobsThisRound.push_back( mobFactory('s',t2) );
 			}
-            
+
+			// LShift pressed: place tower on mouse cursor
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
+				cout << sf::Mouse::getPosition(app).x << "," << sf::Mouse::getPosition(app).y << endl;
+				towersThisRound.push_back(towerFactory(t4, { sf::Mouse::getPosition(app).x - 15 , sf::Mouse::getPosition(app).y - 40}));
+			}
+
             //DEBUG: figure out pixel x,y,z location of click
             if (event.type == sf::Event::MouseButtonPressed) {
                 
@@ -112,12 +124,17 @@ int GameScreen::run(sf::RenderWindow &app) {
         
         //draw to buffer
         app.draw(background);
-		for (auto mob : mobsThisRound) {
+		// draw mobs
+		for (auto mob : mobsThisRound) {	
 			if (mob->getHealth() > 0) {
 				app.draw(mob->getSprite());
 			}
 		}
-        
+		// draw towers
+		for (auto tower : towersThisRound) {
+			tower->setPosition();
+			app.draw(tower->getSprite());
+		}
         // Update the window
         app.display();
     }
