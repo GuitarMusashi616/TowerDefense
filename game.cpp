@@ -7,6 +7,7 @@
 #include "Mob.h"
 #include "MobTypes.h"
 #include "game.hpp"
+#include "Tower.hpp"
 
 using std::vector;
 using std::cout;
@@ -23,6 +24,10 @@ int GameScreen::run(sf::RenderWindow &app) {
 	t1.loadFromFile(resourcePath() + "Resources/GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "Resources/ship.png");
 	sf::Sprite background{ t1 };
+
+	// goomba tower
+	sf::Texture t4;
+	t4.loadFromFile(resourcePath() + "Resources/goombaTower.png",sf::IntRect(5,7,32,80));
 
 	//stuff for keeping track of time
 	sf::Clock timer;
@@ -60,7 +65,9 @@ int GameScreen::run(sf::RenderWindow &app) {
 		//&shipMob2,
 	};
 
-	//List of mobs this round both alive and dead (cleared every round)
+	// List of towers added this round
+	vector<Tower*> towersThisRound{};
+
     // Start the game loop
 	while (app.isOpen())
 	{
@@ -109,6 +116,12 @@ int GameScreen::run(sf::RenderWindow &app) {
 			}
 
 
+			// LShift pressed: place tower on mouse cursor
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
+				cout << sf::Mouse::getPosition(app).x << "," << sf::Mouse::getPosition(app).y << endl;
+				towersThisRound.push_back(towerFactory(t4, { sf::Mouse::getPosition(app).x - 15 , sf::Mouse::getPosition(app).y - 40}));
+			}
+
             //DEBUG: figure out pixel x,y,z location of click
             if (event.type == sf::Event::MouseButtonPressed) {
                 
@@ -129,6 +142,10 @@ int GameScreen::run(sf::RenderWindow &app) {
 			}
 		}
         
+		for (auto tower : towersThisRound) {
+			tower->setPosition();
+			app.draw(tower->getSprite());
+		}
         // Update the window
         app.display();
     }

@@ -3,6 +3,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Mob.h"
+#include "Tower.hpp"
 #include "ResourcePath.hpp"
 #include <string>
 
@@ -25,6 +26,8 @@ int main()
 {
 	// Create the main window
 	sf::RenderWindow window(sf::VideoMode(680, 500), "SFML window");
+	window.setFramerateLimit(25);
+
     //cout << resourcePath();
     std::vector<Screens*> screens;
 
