@@ -18,8 +18,9 @@ using std::vector;
 int main()
 {
 	// Create the main window
-	sf::RenderWindow window(sf::VideoMode(680, 500), "SFML window");
-    
+    sf::RenderWindow window(sf::VideoMode(680 * 2, 500 * 2), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close);
+    window.setFramerateLimit(25);
+
     std::vector<Screens*> screens;
     MenuScreen screen0;
     screens.push_back(&screen0);

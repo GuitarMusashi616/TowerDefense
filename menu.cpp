@@ -6,8 +6,6 @@
 
 using std::cout;
 
-
-
 int MenuScreen::run(sf::RenderWindow &app) {
 
     // Process events
@@ -18,6 +16,7 @@ int MenuScreen::run(sf::RenderWindow &app) {
     sf::Texture t1;
     t1.loadFromFile(resourcePath() + "MenuScreen.png");
     sf::Sprite background{ t1 };
+    background.setScale(2, 2);
 
     while(running) {
         while (app.pollEvent(event))

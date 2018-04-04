@@ -8,6 +8,7 @@
 #include "MobTypes.h"
 #include "game.hpp"
 #include "grid.hpp"
+#include "tile.hpp"
 
 using std::vector;
 using std::cout;
@@ -28,17 +29,10 @@ int GameScreen::run(sf::RenderWindow &app) {
 	sf::Texture t1, t2, t3;
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "ship.png");
-	sf::Sprite background{ t1 };
-
-    //Load square
-    int tileSize = 20;
-
-    int xSize = app.getSize().x / tileSize;
-    int ySize = app.getSize().y / tileSize;
+	sf::Sprite background{ t1};
+    background.setScale(2, 2);
     
-    cout << "X SIZE: " << xSize << endl;
-    cout << "Y SIZE: " << ySize << endl;
-    Grid grid(xSize, ySize, tileSize);
+    Grid grid(app);
     
     
     
@@ -117,10 +111,12 @@ int GameScreen::run(sf::RenderWindow &app) {
 			}
             
             if(event.type == sf::Event::MouseMoved) {
+              
                 int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
                 
                 shared_ptr<Tile> tileClicked = grid.getTile(x, y);
                 tileClicked->setActivated();
+                
             }
         }
         // Clear screen
@@ -140,7 +136,7 @@ int GameScreen::run(sf::RenderWindow &app) {
                 if(toDraw->isActivated()) app.draw(rect);
             }
         }
-        
+    
         // Draw Mobs
         for (auto mob : mobsThisRound) {
             if (mob->getHealth() > 0) {
