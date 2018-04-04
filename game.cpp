@@ -16,6 +16,11 @@ using std::endl;
 using std::shared_ptr;
 
 
+void resizeView(const sf::RenderWindow& window, sf::View & view) {
+    float aspectRatio = ((float) window.getSize().x) / ((float) window.getSize().y);
+    view.setSize(1000 * aspectRatio, 1000);
+}
+
 
 int GameScreen::run(sf::RenderWindow &app) {
 
@@ -32,6 +37,9 @@ int GameScreen::run(sf::RenderWindow &app) {
 	t2.loadFromFile(resourcePath() + "ship.png");
 	sf::Sprite background{ t1};
     background.setScale(2, 2);
+    
+    //Create a View
+    //    sf::View view(sf::Vector2f(0,0), sf::Vector2f(app.getSize().x, app.getSize().y));
     
     Grid grid(app);
     
@@ -110,7 +118,10 @@ int GameScreen::run(sf::RenderWindow &app) {
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
                 showTile = !showTile;
             }
-            
+            if(event.type == sf::Event::Resized) {
+                //resizeView(app, view);
+                cout << "Resized" << endl;
+            }
             
             if(event.type == sf::Event::MouseMoved) {
                 int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
@@ -119,8 +130,14 @@ int GameScreen::run(sf::RenderWindow &app) {
                 tileClicked->setActivated();
             }
         }
+        
+        //view.setCenter(680,500);
+        
         // Clear screen
         app.clear();
+        
+        //Set View
+        //app.setView(view);
         
         //draw Background
         app.draw(background);
