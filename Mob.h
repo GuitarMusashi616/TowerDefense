@@ -13,12 +13,14 @@ struct coord {
 	int x;
 	int y;
 };
+
 class Mob
 {
 public:
 	Mob();
+	Mob(const sf::Texture &,int);
 	Mob(const sf::Texture &,const coord &,int,int);
-	~Mob();
+	virtual ~Mob();
 	sf::Vector2f nextPosition(std::vector<coord> &);
 	sf::Sprite &getSprite();
 	void setPosition(const sf::Vector2f &moveTo);
@@ -36,12 +38,13 @@ protected:
 
 class DynamicMob : public Mob {
 	//only use with "new"
+	//no longer needed
 public:
-	//DynamicMob();
+	DynamicMob() = delete;
 	DynamicMob(const sf::Texture &);
-	~DynamicMob();
+	~DynamicMob() override;
 };
 
-Mob* mobFactory(char c,sf::Texture &texture);
+std::unique_ptr<Mob> mobFactory(char c,const sf::Texture &texture, int speed);
 
 #endif

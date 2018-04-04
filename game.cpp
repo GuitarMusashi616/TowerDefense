@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector> 
+#include <memory>
  
 #include "ResourcePath.hpp"
 #include "Mob.h"
@@ -11,8 +12,6 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-
-
 int GameScreen::run(sf::RenderWindow &app) {
 
 	// Process events
@@ -20,19 +19,17 @@ int GameScreen::run(sf::RenderWindow &app) {
 	bool running = true;
 
 	//load textures
-	sf::Texture t1, t2, t3;
-<<<<<<< HEAD
+	sf::Texture t1, t2;
 	t1.loadFromFile(resourcePath() + "Resources/GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "Resources/ship.png");
-=======
-	t1.loadFromFile(resourcePath() + "GrassTrack.png");
-	t2.loadFromFile(resourcePath() + "ship.png");
->>>>>>> a9fcd4d419b2aeedce3b0b6514585e52a93f963b
 	sf::Sprite background{ t1 };
 
 	//stuff for keeping track of time
 	sf::Clock timer;
 	auto lastTime = sf::Time::Zero;
+	//changeable:
+	static const int TPS = 60;
+	const int defaultSpeed = 2;
 
 	//mobs to spawn
 	//Mob shipMob{ t2,{0,0},1,1 };
@@ -58,26 +55,32 @@ int GameScreen::run(sf::RenderWindow &app) {
 		{500,500},
     };
 
-	vector<Mob*> mobsThisRound{
+	vector< std::unique_ptr<Mob> > mobsThisRound{
 		//&shipMob,
 		//&shipMob2,
 	};
 
 	//List of mobs this round both alive and dead (cleared every round)
     // Start the game loop
-    while (app.isOpen())
-    {
-        //fixedTimerLoop
-        auto time = timer.getElapsedTime();
-        if ( (time - lastTime).asMilliseconds() > 10) {
+	while (app.isOpen())
+	{
+		//fixedTimerLoop
+		auto time = timer.getElapsedTime();
+		if ((time - lastTime).asMilliseconds() > (1. / TPS)*1000) {
             lastTime = time;
             
-			for (auto mob : mobsThisRound ) {
-				auto moveTo = mob->nextPosition(shipAi);
+			for (int i = 0; i < mobsThisRound.size();i++) {
+				auto moveTo = mobsThisRound[i]->nextPosition(shipAi);
 				//cout << moveTo.x << ", " << moveTo.y << endl;
-				mob->setPosition(moveTo);
+				mobsThisRound[i]->setPosition(moveTo);
+				if (mobsThisRound[i]->getHealth()==0) {
+					//attempting to get mob out of scope and therefore out of memory by removing it from the vector
+					//cout << mobsThisRound[i]->getPosition().x << ", " << mobsThisRound[i]->getPosition().y << endl;
+					mobsThisRound[i].reset();
+					mobsThisRound.erase(mobsThisRound.begin() + i);
+				}
 			}
-            //updates ships' positions every 10 milliseconds
+            //updates ships' positions based on TPS value
         }
         
         // Process events
@@ -95,9 +98,17 @@ int GameScreen::run(sf::RenderWindow &app) {
             }
 
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab) {
-				mobsThisRound.push_back( mobFactory('s',t2) );
+				mobsThisRound.push_back( mobFactory('s',t2, defaultSpeed) );
 			}
-            
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Equal) {
+				//counter test for now, going to use for testing if resizing window affects track length for mobs
+				//no purpose atm
+				static int tCount = 0;
+				tCount++;
+				cout << tCount << endl;
+			}
+
+
             //DEBUG: figure out pixel x,y,z location of click
             if (event.type == sf::Event::MouseButtonPressed) {
                 
@@ -112,7 +123,7 @@ int GameScreen::run(sf::RenderWindow &app) {
         
         //draw to buffer
         app.draw(background);
-		for (auto mob : mobsThisRound) {
+		for (const auto &mob : mobsThisRound) {
 			if (mob->getHealth() > 0) {
 				app.draw(mob->getSprite());
 			}

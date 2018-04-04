@@ -27,10 +27,13 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(680, 500), "SFML window");
     //cout << resourcePath();
     std::vector<Screens*> screens;
+
     MenuScreen screen0;
     screens.push_back(&screen0);
+
     GameScreen screen1;
     screens.push_back(&screen1);
+
     int screen = 0;
     
     

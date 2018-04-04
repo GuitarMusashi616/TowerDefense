@@ -1,2 +1,11 @@
-﻿  main.cpp
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (TowerDefense.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  game.cpp
+c:\users\austinwilliams\source\repos\sfml project\sfml project\game.cpp(18): warning C4101: 'event': unreferenced local variable
+  Mob.cpp
+  Generating Code...
+c:\users\austinwilliams\source\repos\sfml project\sfml project\mob.cpp(97): warning C4715: 'mobFactory': not all control paths return a value
+  Compiling...
+  main.cpp
+  MobTypes.cpp
+  Generating Code...
   SFML Project.vcxproj -> C:\Users\AustinWilliams\source\repos\SFML Project\x64\Debug\SFML Project.exe
