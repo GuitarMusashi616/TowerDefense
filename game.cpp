@@ -23,8 +23,9 @@ int GameScreen::run(sf::RenderWindow &app) {
 	sf::Event event;
 	bool running = true;
 
-    //Initialize static activated member of tile
-        
+    //Highlight actiev tile?
+    bool showTile = false;
+    
 	//load textures
 	sf::Texture t1, t2, t3;
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
@@ -33,10 +34,6 @@ int GameScreen::run(sf::RenderWindow &app) {
     background.setScale(2, 2);
     
     Grid grid(app);
-    
-    
-    
-    
     
     sf::RectangleShape rectangle(sf::Vector2f(50, 50));
     sf::Color transparentRed(255, 0, 0, 100);
@@ -110,13 +107,16 @@ int GameScreen::run(sf::RenderWindow &app) {
 				mobsThisRound.push_back( mobFactory('s',t2) );
 			}
             
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                showTile = !showTile;
+            }
+            
+            
             if(event.type == sf::Event::MouseMoved) {
-              
                 int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
                 
                 shared_ptr<Tile> tileClicked = grid.getTile(x, y);
                 tileClicked->setActivated();
-                
             }
         }
         // Clear screen
@@ -125,18 +125,19 @@ int GameScreen::run(sf::RenderWindow &app) {
         //draw Background
         app.draw(background);
     
-        //Draw active tile
-        std::vector<std::vector<shared_ptr<Tile>>> tileGrid = grid.getTiles();
-        for(auto y = 0; y < tileGrid.size(); y++) {
-            for(auto x = 0; x < tileGrid[y].size(); x++)
-            {
-                shared_ptr<Tile> toDraw = grid.getTiles()[y][x];
-                sf::RectangleShape rect = toDraw->getTile();
-                rect.setPosition((float) toDraw->getPosition().x, (float) toDraw->getPosition().y);
-                if(toDraw->isActivated()) app.draw(rect);
+        if(showTile) {
+            //Draw active tile
+            std::vector<std::vector<shared_ptr<Tile>>> tileGrid = grid.getTiles();
+            for(auto y = 0; y < tileGrid.size(); y++) {
+                for(auto x = 0; x < tileGrid[y].size(); x++)
+                {
+                    shared_ptr<Tile> toDraw = grid.getTiles()[y][x];
+                    sf::RectangleShape rect = toDraw->getTile();
+                    rect.setPosition((float) toDraw->getPosition().x, (float) toDraw->getPosition().y);
+                    if(toDraw->isActivated()) app.draw(rect);
+                }
             }
         }
-    
         // Draw Mobs
         for (auto mob : mobsThisRound) {
             if (mob->getHealth() > 0) {
