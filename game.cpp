@@ -1,16 +1,26 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector> 
- 
+
+#include <memory>
+
 #include "ResourcePath.hpp"
 #include "Mob.h"
 #include "MobTypes.h"
 #include "game.hpp"
+#include "grid.hpp"
+#include "tile.hpp"
 
 using std::vector;
 using std::cout;
 using std::endl;
+using std::shared_ptr;
 
+
+void resizeView(const sf::RenderWindow& window, sf::View & view) {
+    float aspectRatio = ((float) window.getSize().x) / ((float) window.getSize().y);
+    view.setSize(1000 * aspectRatio, 1000);
+}
 
 
 int GameScreen::run(sf::RenderWindow &app) {
@@ -19,17 +29,26 @@ int GameScreen::run(sf::RenderWindow &app) {
 	sf::Event event;
 	bool running = true;
 
+    //Highlight actiev tile?
+    bool showTile = false;
+    
 	//load textures
 	sf::Texture t1, t2, t3;
-<<<<<<< HEAD
-	t1.loadFromFile(resourcePath() + "Resources/GrassTrack.png");
-	t2.loadFromFile(resourcePath() + "Resources/ship.png");
-=======
+
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "ship.png");
->>>>>>> a9fcd4d419b2aeedce3b0b6514585e52a93f963b
-	sf::Sprite background{ t1 };
-
+	sf::Sprite background{ t1};
+    background.setScale(2, 2);
+    
+    //Create a View
+    //    sf::View view(sf::Vector2f(0,0), sf::Vector2f(app.getSize().x, app.getSize().y));
+    
+    Grid grid(app);
+    
+    sf::RectangleShape rectangle(sf::Vector2f(50, 50));
+    sf::Color transparentRed(255, 0, 0, 100);
+    rectangle.setFillColor(transparentRed);
+    
 	//stuff for keeping track of time
 	sf::Clock timer;
 	auto lastTime = sf::Time::Zero;
@@ -98,25 +117,52 @@ int GameScreen::run(sf::RenderWindow &app) {
 				mobsThisRound.push_back( mobFactory('s',t2) );
 			}
             
-            //DEBUG: figure out pixel x,y,z location of click
-            if (event.type == sf::Event::MouseButtonPressed) {
-                
-                int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
-                cout << x << ", " << y << endl;
-                shipMob.setPosition(sf::Vector2f{ float(x), float(y) });
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                showTile = !showTile;
+            }
+            if(event.type == sf::Event::Resized) {
+                //resizeView(app, view);
+                cout << "Resized" << endl;
             }
             
+            if(event.type == sf::Event::MouseMoved) {
+                int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
+                
+                shared_ptr<Tile> tileClicked = grid.getTile(x, y);
+                tileClicked->setActivated();
+            }
         }
+        
+        //view.setCenter(680,500);
+        
         // Clear screen
         app.clear();
         
-        //draw to buffer
+        //Set View
+        //app.setView(view);
+        
+        //draw Background
         app.draw(background);
-		for (auto mob : mobsThisRound) {
-			if (mob->getHealth() > 0) {
-				app.draw(mob->getSprite());
-			}
-		}
+    
+        if(showTile) {
+            //Draw active tile
+            std::vector<std::vector<shared_ptr<Tile>>> tileGrid = grid.getTiles();
+            for(auto y = 0; y < tileGrid.size(); y++) {
+                for(auto x = 0; x < tileGrid[y].size(); x++)
+                {
+                    shared_ptr<Tile> toDraw = grid.getTiles()[y][x];
+                    sf::RectangleShape rect = toDraw->getTile();
+                    rect.setPosition((float) toDraw->getPosition().x, (float) toDraw->getPosition().y);
+                    if(toDraw->isActivated()) app.draw(rect);
+                }
+            }
+        }
+        // Draw Mobs
+        for (auto mob : mobsThisRound) {
+            if (mob->getHealth() > 0) {
+                app.draw(mob->getSprite());
+            }
+        }
         
         // Update the window
         app.display();

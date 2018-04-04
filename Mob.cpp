@@ -15,23 +15,24 @@ Mob::~Mob()
 
 sf::Vector2f Mob::nextPosition(std::vector<coord> &coords)
 {
+    int scaleFactor = 2;
 	//finds next location to move to
-	if (coords[_positionKey].x > _position.x) {
+	if (coords[_positionKey].x * scaleFactor > _position.x) {
 		_position.x += 1;
 	}
-	else if (coords[_positionKey].x < _position.x) {
+	else if (coords[_positionKey].x * scaleFactor< _position.x) {
 		_position.x -= 1;
 	}
-	if (coords[_positionKey].y > _position.y) {
+	if (coords[_positionKey].y * scaleFactor> _position.y) {
 		_position.y += 1;
 	}
-	else if (coords[_positionKey].y < _position.y) {
+	else if (coords[_positionKey].y * scaleFactor< _position.y) {
 		_position.y -= 1;
 	}
 	if (_positionKey == coords.size()-1) {
 		this->setHealth(0);
 	}
-	else if (coords[_positionKey].x == _position.x && coords[_positionKey].y == _position.y) {
+	else if (coords[_positionKey].x * scaleFactor == _position.x && coords[_positionKey].y * scaleFactor == _position.y) {
 		_positionKey++;
 	}
 	return sf::Vector2f{ float(_position.x),float(_position.y) };

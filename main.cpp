@@ -3,8 +3,10 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Mob.h"
+
 #include "ResourcePath.hpp"
 #include <string>
+
 
 #include "screens.hpp"
 #include "game.hpp"
@@ -16,18 +18,17 @@ using std::endl;
 using std::vector;
 using std::string;
 
-string resourcePath() {
-	//comment out if on mac!
-	return "";
-}
+//string resourcePath() {
+//	//comment out if on mac!
+//	return "";
+//}
 
 int main()
 {
-	// Create the main window
-	sf::RenderWindow window(sf::VideoMode(680, 500), "SFML window");
-	window.setFramerateLimit(25);
 
-    //cout << resourcePath();
+    sf::RenderWindow window(sf::VideoMode(680 * 2, 500 * 2), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close);
+    window.setFramerateLimit(25);
+
     std::vector<Screens*> screens;
     MenuScreen screen0;
     screens.push_back(&screen0);
@@ -42,4 +43,5 @@ int main()
     }
     
     return EXIT_SUCCESS;
+
 }
