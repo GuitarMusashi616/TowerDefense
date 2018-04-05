@@ -3,11 +3,12 @@
 
 #include <stdio.h>
 #include <SFML/Graphics.hpp>
+#include "framework.hpp"
 
 class Screens
 {
     public :
-    virtual int run(sf::RenderWindow &app) =0;
+    virtual int run(sf::RenderWindow &app, const Framework & framework) =0;
 };
 
 

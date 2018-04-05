@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector> 
-
+#include <cmath>
 #include <memory>
 
 #include "ResourcePath.hpp"
@@ -11,21 +11,24 @@
 #include "grid.hpp"
 #include "tile.hpp"
 #include "Tower.hpp"
+#include "framework.hpp"
 
 using std::vector;
 using std::cout;
 using std::endl;
 using std::shared_ptr;
+using std::abs;
 
 
-void resizeView(const sf::RenderWindow& window, sf::View & view) {
-    float aspectRatio = ((float) window.getSize().x) / ((float) window.getSize().y);
-    view.setSize(1000 * aspectRatio, 1000);
-}
 
 
-int GameScreen::run(sf::RenderWindow &app) {
 
+int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
+
+    //Base window size:
+    float xSize0 = 680;
+    float ySize0 = 500;
+    
 	// Process events
 	sf::Event event;
 	bool running = true;
@@ -39,11 +42,7 @@ int GameScreen::run(sf::RenderWindow &app) {
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "ship.png");
 	sf::Sprite background{ t1};
-    background.setScale(2, 2);
-    
-    //Create a View
-    //    sf::View view(sf::Vector2f(0,0), sf::Vector2f(app.getSize().x, app.getSize().y));
-    
+
     Grid grid(app);
     
     sf::RectangleShape rectangle(sf::Vector2f(50, 50));
@@ -111,16 +110,10 @@ int GameScreen::run(sf::RenderWindow &app) {
         sf::Event event;
         while (app.pollEvent(event))
         {
-            // Close window: exit
-            if (event.type == sf::Event::Closed) {
-                app.close();
-            }
+            //Core Events:
             
-            // Escape pressed: exit
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-                app.close();
-            }
-
+            framework.handleEvents(app, event);
+            
 			// Tab pressed: place mob
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab) {
 				mobsThisRound.push_back( mobFactory('s',t2) );
@@ -128,12 +121,6 @@ int GameScreen::run(sf::RenderWindow &app) {
             
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
                 showTile = !showTile;
-            }
-            
-            if(event.type == sf::Event::Resized)
-            {
-                //resizeView(app, view);
-                cout << "Resized" << endl;
             }
         
 			// LShift pressed: place tower on mouse cursor
@@ -153,12 +140,18 @@ int GameScreen::run(sf::RenderWindow &app) {
             if(event.type == sf::Event::MouseMoved) {
                 int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
                 
-                shared_ptr<Tile> tileClicked = grid.getTile(x, y);
-                tileClicked->setActivated();
+                int fixedX = (float(x) / app.getSize().x) * 680;
+                int fixedY = (float(y) / app.getSize().y) * 500;
+                
+                // to Prevent crashing (sometimes the mouse reads the value before 
+                if(fixedX <= 680 && fixedY <= 500) {
+                    shared_ptr<Tile> tileClicked = grid.getTile(fixedX, fixedY);
+                        tileClicked->setActivated();
+                } else {
+                    cout << "Would have crashed here!" << endl;
+                }
             }
         }
-        
-        //view.setCenter(680,500);
         
         // Clear screen
         app.clear();

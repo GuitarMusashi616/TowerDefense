@@ -3,10 +3,11 @@
 
 #include "ResourcePath.hpp"
 #include "menu.hpp"
+#include "framework.hpp"
 
 using std::cout;
 
-int MenuScreen::run(sf::RenderWindow &app) {
+int MenuScreen::run(sf::RenderWindow &app, const Framework & framework) {
 
     // Process events
     sf::Event event;
@@ -18,20 +19,13 @@ int MenuScreen::run(sf::RenderWindow &app) {
     t1.loadFromFile(resourcePath() + "MenuScreen.png");
     
     sf::Sprite background{ t1 };
-    background.setScale(2, 2);
+    //background.setScale(2, 2);
 
     while(running) {
         while (app.pollEvent(event))
         {
-            // Close window: exit
-            if (event.type == sf::Event::Closed) {
-                app.close();
-            }
             
-            // Escape pressed: exit
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-                app.close();
-            }
+            framework.handleEvents(app, event);
             
             if (event.type == sf::Event::MouseButtonPressed)
             {

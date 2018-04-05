@@ -17,8 +17,10 @@ int gcd(int a, int b) {
 
 Grid::Grid(sf::Window const & app)
 {
-    int xWindow = app.getSize().x;
-    int yWindow = app.getSize().y;
+//    int xWindow = app.getSize().x;
+//    int yWindow = app.getSize().y;
+    int xWindow = 680;
+    int yWindow = 500;
     
     _tileSize = gcd(xWindow,yWindow);
 

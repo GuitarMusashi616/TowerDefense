@@ -15,7 +15,7 @@ Mob::~Mob()
 
 sf::Vector2f Mob::nextPosition(std::vector<coord> &coords)
 {
-    int scaleFactor = 2;
+    int scaleFactor = 1;
 	//finds next location to move to
 	if (coords[_positionKey].x * scaleFactor > _position.x) {
 		_position.x += 1;

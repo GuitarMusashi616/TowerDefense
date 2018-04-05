@@ -12,6 +12,7 @@
 #include "screens.hpp"
 #include "game.hpp"
 #include "menu.hpp"
+#include "framework.hpp"
 
 using std::cout;
 using std::cin;
@@ -27,8 +28,10 @@ using std::string;
 int main()
 {
 
-    sf::RenderWindow window(sf::VideoMode(680 * 2, 500 * 2), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(680, 500), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
     window.setFramerateLimit(25);
+    
+    Framework framework(window);
 
     std::vector<Screens*> screens;
     MenuScreen screen0;
@@ -37,10 +40,11 @@ int main()
     screens.push_back(&screen1);
     int screen = 0;
     
-    
+    sf::Event event;
+
     while (screen >= 0)
     {
-        screen = screens[screen]->run(window);
+        screen = screens[screen]->run(window, framework);
     }
     
     return EXIT_SUCCESS;

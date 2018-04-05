@@ -5,11 +5,12 @@
 #include <SFML/Graphics.hpp>
 
 #include "screens.hpp"
+#include "framework.hpp"
 
 class GameScreen : public Screens
 {
 public:
-    int run(sf::RenderWindow &app);
+    int run(sf::RenderWindow &app, const Framework & framework);
     
 };
 
