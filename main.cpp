@@ -27,8 +27,12 @@ using std::string;
 
 int main()
 {
-
-    sf::RenderWindow window(sf::VideoMode(680, 500), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
+    //Grab these from a config file eventually
+    const int XSIZE = 680;
+    const int YSIZE = 500;
+    
+    
+    sf::RenderWindow window(sf::VideoMode(XSIZE, YSIZE), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
     window.setFramerateLimit(25);
     
     Framework framework(window);

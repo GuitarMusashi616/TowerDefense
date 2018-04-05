@@ -19,10 +19,6 @@ using std::endl;
 using std::shared_ptr;
 using std::abs;
 
-
-
-
-
 int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
 
     //Base window size:
@@ -113,7 +109,8 @@ int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
             //Core Events:
             
             framework.handleEvents(app, event);
-            
+            Tile::handleEvents(app, event, grid, framework);
+
 			// Tab pressed: place mob
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab) {
 				mobsThisRound.push_back( mobFactory('s',t2) );
@@ -128,29 +125,8 @@ int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
 				cout << sf::Mouse::getPosition(app).x << "," << sf::Mouse::getPosition(app).y << endl;
 				towersThisRound.push_back(towerFactory(t4, { sf::Mouse::getPosition(app).x - 15 , sf::Mouse::getPosition(app).y - 40}));
 			}
-
-            //DEBUG: figure out pixel x,y,z location of click
-            if (event.type == sf::Event::MouseButtonPressed) {
-                
-                int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
-                cout << x << ", " << y << endl;
-                shipMob.setPosition(sf::Vector2f{ float(x), float(y) });
-            }
             
-            if(event.type == sf::Event::MouseMoved) {
-                int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
-                
-                int fixedX = (float(x) / app.getSize().x) * 680;
-                int fixedY = (float(y) / app.getSize().y) * 500;
-                
-                // to Prevent crashing (sometimes the mouse reads the value before 
-                if(fixedX <= 680 && fixedY <= 500) {
-                    shared_ptr<Tile> tileClicked = grid.getTile(fixedX, fixedY);
-                        tileClicked->setActivated();
-                } else {
-                    cout << "Would have crashed here!" << endl;
-                }
-            }
+            
         }
         
         // Clear screen

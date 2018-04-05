@@ -56,10 +56,10 @@ Grid::Grid(sf::Window const & app)
     }
 }
 
-shared_ptr<Tile> Grid::getTile(int x, int y) {
-    return _grid[y / _tileSize][x / _tileSize];
+shared_ptr<Tile> Grid::getTile(const sf::Vector2f & vector) const {
+    return _grid[vector.y / _tileSize][vector.x / _tileSize];
 }
 
-vector<vector<shared_ptr<Tile>>> Grid::getTiles() {
+vector<vector<shared_ptr<Tile>>> Grid::getTiles() const{
     return _grid;
 }

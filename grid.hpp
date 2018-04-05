@@ -13,8 +13,8 @@
 class Grid {
 public:
     Grid(const sf::Window & app);
-    std::vector<std::vector<std::shared_ptr<Tile>>> getTiles();
-    std::shared_ptr<Tile> getTile(int x, int y);
+    std::vector<std::vector<std::shared_ptr<Tile>>> getTiles() const;
+    std::shared_ptr<Tile> getTile(const sf::Vector2f & vector) const;
 private:
     int _xSize;
     int _ySize;

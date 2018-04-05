@@ -5,6 +5,9 @@
 #include <memory>
 #include <iostream>
 
+#include "grid.hpp"
+#include "framework.hpp"
+
 using std::cout;
 using std::endl;
 using std::vector;
@@ -49,4 +52,22 @@ bool Tile::isActivated() {
 
 shared_ptr<Tile> Tile::getActivated() {
     return _activated;
+}
+
+
+void Tile::handleEvents(sf::Window & app, sf::Event & event, const Grid & grid, const Framework & framework)
+{
+    if(event.type == sf::Event::MouseMoved) {
+        int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
+        
+        // to Prevent crashing (sometimes the mouse reads the value before
+        sf::Vector2<float> corrected = framework.getCorrectedMousePosition(app, sf::Vector2f(x,y));
+        
+        if(corrected.x <= 680 && corrected.y <= 500) {
+            shared_ptr<Tile> tileClicked = grid.getTile(corrected);
+            tileClicked->setActivated();
+        } else {
+            cout << "Would have crashed here!" << endl;
+        }
+    }
 }

@@ -14,6 +14,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
+#include "framework.hpp"
+class Grid;
 struct TileCoord
 {
     int x;
@@ -29,6 +31,7 @@ public:
     void setActivated();
     bool isActivated();
     static std::shared_ptr<Tile> getActivated();
+    static void handleEvents(sf::Window & app, sf::Event & event, const Grid & grid, const Framework & framework);
 private:
     sf::RectangleShape _square;
     TileCoord _position;

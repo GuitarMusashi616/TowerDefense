@@ -14,6 +14,17 @@ Framework::Framework(sf::Window &app)
     _aspectRatio = aspectRatio;
 }
 
+float Framework::getAspectRatio() const
+{
+    return _aspectRatio;
+}
+
+sf::Vector2f Framework::getCorrectedMousePosition(const sf::Window & app, const sf::Vector2f & vector) const {
+    float fixedX = (float(vector.x) / app.getSize().x) * _xSize;
+    float fixedY = (float(vector.y) / app.getSize().y) * _ySize;
+    return sf::Vector2f(fixedX, fixedY);
+}
+
 void Framework::handleEvents(sf::Window & app, sf::Event & event) const
 {
     if(event.type == sf::Event::Resized)
@@ -33,11 +44,4 @@ void Framework::handleEvents(sf::Window & app, sf::Event & event) const
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
         app.close();
     }
-    
-    
-}
-
-float Framework::getAspectRatio() const
-{
-    return _aspectRatio;
 }
