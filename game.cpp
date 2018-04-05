@@ -122,8 +122,12 @@ int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
         
 			// LShift pressed: place tower on mouse cursor
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
-				cout << sf::Mouse::getPosition(app).x << "," << sf::Mouse::getPosition(app).y << endl;
-				towersThisRound.push_back(towerFactory(t4, { sf::Mouse::getPosition(app).x - 15 , sf::Mouse::getPosition(app).y - 40}));
+                cout << sf::Mouse::getPosition(app).x << "," << sf::Mouse::getPosition(app).y << endl;
+                float x = sf::Mouse::getPosition(app).x;
+                float y = sf::Mouse::getPosition(app).y;
+                sf::Vector2<float> corrected = framework.getCorrectedMousePosition(app, sf::Vector2f(x - 15,y - 40));
+                
+                towersThisRound.push_back(towerFactory(t4, {(int) corrected.x, (int) corrected.y}));
 			}
             
             
