@@ -55,19 +55,16 @@ shared_ptr<Tile> Tile::getActivated() {
 }
 
 
-void Tile::handleEvents(sf::Window & app, sf::Event & event, const Grid & grid, const Framework & framework)
+void Tile::handleEvents(sf::RenderWindow & app, sf::Event & event, const Grid & grid, const Framework & framework)
 {
     if(event.type == sf::Event::MouseMoved) {
-        int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
         
-        // to Prevent crashing (sometimes the mouse reads the value before
-        sf::Vector2<float> corrected = framework.getCorrectedMousePosition(app, sf::Vector2f(x,y));
+        sf::Vector2f viewSize = framework.getViewSize();
+        sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
         
-        if(corrected.x <= 680 && corrected.y <= 500) {
-            shared_ptr<Tile> tileClicked = grid.getTile(corrected);
+        if(worldPos.x < viewSize.x && worldPos.y < viewSize.y) {
+            shared_ptr<Tile> tileClicked = grid.getTile(worldPos);
             tileClicked->setActivated();
-        } else {
-            cout << "Would have crashed here!" << endl;
         }
     }
 }

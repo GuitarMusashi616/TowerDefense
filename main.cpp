@@ -28,15 +28,18 @@ using std::string;
 int main()
 {
     //Grab these from a config file eventually
-    const int XSIZE = 680;
-    const int YSIZE = 500;
+    const sf::Vector2f WINDOWSIZE(780,500);
+    const sf::Vector2f VIEWSIZE(680,500);
+
     
-    
-    sf::RenderWindow window(sf::VideoMode(XSIZE, YSIZE), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
+    sf::RenderWindow window(sf::VideoMode(WINDOWSIZE.x, WINDOWSIZE.y), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
     window.setFramerateLimit(25);
     
-    Framework framework(window);
+    
+    Framework framework(window, VIEWSIZE);
 
+    
+    
     std::vector<Screens*> screens;
     MenuScreen screen0;
     screens.push_back(&screen0);

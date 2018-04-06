@@ -19,11 +19,13 @@ using std::endl;
 using std::shared_ptr;
 using std::abs;
 
-int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
+int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
     //Base window size:
-    float xSize0 = 680;
-    float ySize0 = 500;
+    float xSize0 = framework.getWindowX();
+    float ySize0 = framework.getWindowY();
+    float xViewSize = xSize0 - 100;
+    float yViewSize = ySize0;
     
 	// Process events
 	sf::Event event;
@@ -31,8 +33,15 @@ int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
 
     //Highlight actiev tile?
     bool showTile = false;
+
+    //Menu view:
+    sf::View view1(sf::FloatRect(0, 0, xSize0, ySize0));
+    view1.setViewport(sf::FloatRect(0, 0, xViewSize / xSize0, yViewSize / ySize0));
+    view1.setSize(xViewSize, yViewSize);    
+
+    app.setView(view1);
     
-	//load textures
+    //load textures
 	sf::Texture t1, t2, t3;
 
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
@@ -41,9 +50,10 @@ int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
 
     Grid grid(app);
     
-    sf::RectangleShape rectangle(sf::Vector2f(50, 50));
+    sf::CircleShape circle(30);
+    circle.setPosition(200 - circle.getRadius(), 300 - circle.getRadius());
     sf::Color transparentRed(255, 0, 0, 100);
-    rectangle.setFillColor(transparentRed);
+    circle.setFillColor(transparentRed);
     
 	// goomba tower
 	sf::Texture t4;
@@ -119,16 +129,60 @@ int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
                 showTile = !showTile;
             }
+            
+            float scaleFactor = 1.5;
+            
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z) {
+                if(view1.getSize().x * 1.5 > xSize0 || view1.getSize().y * scaleFactor > ySize0) {
+                    view1.setSize(xViewSize, yViewSize);
+                } else {
+                    view1.zoom(1.5);
+
+                }
+                cout << "Zoom In" << endl;
+            }
+            
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::X) {
+                view1.zoom(0.75);
+                cout << "Zoom Out" << endl;
+
+            }
+
         
 			// LShift pressed: place tower on mouse cursor
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
                 cout << sf::Mouse::getPosition(app).x << "," << sf::Mouse::getPosition(app).y << endl;
                 float x = sf::Mouse::getPosition(app).x;
                 float y = sf::Mouse::getPosition(app).y;
-                sf::Vector2<float> corrected = framework.getCorrectedMousePosition(app, sf::Vector2f(x - 15,y - 40));
                 
-                towersThisRound.push_back(towerFactory(t4, {(int) corrected.x, (int) corrected.y}));
+                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Vector2i(x - 15, y - 40));
+
+                towersThisRound.push_back(towerFactory(t4, {(int) worldPos.x, (int) worldPos.y}));
 			}
+            
+            
+            
+            if(event.type == sf::Event::MouseButtonPressed)
+            {
+                
+                float x = sf::Mouse::getPosition(app).x;
+                float y = sf::Mouse::getPosition(app).y;
+                
+                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+//                cout << "Mouse Position: (" << x << ", " << y << ")" << endl;
+//                cout << "World Position: (" << worldPos.x << ", " << worldPos.y << ")" << endl;
+//
+//                cout << "Circle Position: (" << circle.getPosition().x << ", " << circle.getPosition().y << ")" << endl;
+//
+                sf::Vector2<float> corrected = framework.getCorrectedMousePosition(app,x,y);
+                if(circle.getGlobalBounds().contains(worldPos.x, worldPos.y))
+                   {
+                       sf::Vector2f initPosition = circle.getPosition();
+                       circle.setRadius(circle.getRadius() + 2);
+                       circle.setPosition(200 - circle.getRadius(), 300 - circle.getRadius());
+
+                   }
+            }
             
             
         }
@@ -136,9 +190,9 @@ int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
         // Clear screen
         app.clear();
         
-        //Set View
-        //app.setView(view);
-        
+        view1.setCenter(xSize0/2, ySize0/2);
+        app.setView(view1);
+    
         //draw Background
         app.draw(background);
     
@@ -167,6 +221,8 @@ int GameScreen::run(sf::RenderWindow &app, const Framework & framework) {
 			tower->setPosition();
 			app.draw(tower->getSprite());
 		}
+        
+        app.draw(circle);
         // Update the window
         app.display();
     }
