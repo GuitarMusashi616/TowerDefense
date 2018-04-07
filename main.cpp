@@ -3,7 +3,6 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Mob.h"
-#include "Tower.hpp"
 #include "ResourcePath.hpp"
 #include <string>
 
@@ -19,15 +18,13 @@ using std::string;
 
 string resourcePath() {
 	//comment out if on mac!
-	return "";
+	return "Resources/";
 }
 
 int main()
 {
 	// Create the main window
-	sf::RenderWindow window(sf::VideoMode(680, 500), "SFML window");
-	window.setFramerateLimit(25);
-
+	sf::RenderWindow window(sf::VideoMode(680, 600), "SFML window");
     //cout << resourcePath();
     std::vector<Screens*> screens;
 

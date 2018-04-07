@@ -1,11 +1,13 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (TowerDefense.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   game.cpp
-c:\users\austinwilliams\source\repos\sfml project\sfml project\game.cpp(18): warning C4101: 'event': unreferenced local variable
-  Mob.cpp
-  Generating Code...
-c:\users\austinwilliams\source\repos\sfml project\sfml project\mob.cpp(97): warning C4715: 'mobFactory': not all control paths return a value
-  Compiling...
-  main.cpp
-  MobTypes.cpp
-  Generating Code...
+c:\users\austinwilliams\source\repos\sfml project\sfml project\game.cpp(155): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\austinwilliams\source\repos\sfml project\sfml project\game.cpp(161): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\austinwilliams\source\repos\sfml project\sfml project\game.cpp(32): warning C4101: 'event': unreferenced local variable
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\memory(2438): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\users\austinwilliams\source\repos\sfml project\sfml project\game.cpp(195): note: see reference to function template instantiation 'std::unique_ptr<Ghost,std::default_delete<_Ty>> std::make_unique<Ghost,T,T,void>(T &&,T &&)' being compiled
+          with
+          [
+              _Ty=Ghost,
+              T=int
+          ]
   SFML Project.vcxproj -> C:\Users\AustinWilliams\source\repos\SFML Project\x64\Debug\SFML Project.exe

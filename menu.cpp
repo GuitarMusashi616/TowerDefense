@@ -5,7 +5,7 @@
 #include "menu.hpp"
 
 using std::cout;
-
+using std::endl;
 
 
 int MenuScreen::run(sf::RenderWindow &app) {
@@ -16,7 +16,7 @@ int MenuScreen::run(sf::RenderWindow &app) {
     //load textures
     
     sf::Texture t1;
-    t1.loadFromFile(resourcePath() + "Resources/MenuScreen.png");
+    t1.loadFromFile(resourcePath() + "MenuScreen.png");
     sf::Sprite background{ t1 };
 
     while(running) {
@@ -34,7 +34,7 @@ int MenuScreen::run(sf::RenderWindow &app) {
             
             if (event.type == sf::Event::MouseButtonPressed)
             {
-                    cout << "Mouse Clicked: Starting game!";
+                    cout << "Mouse Clicked: Starting game!" << endl;
                     return 1;
             }
         }

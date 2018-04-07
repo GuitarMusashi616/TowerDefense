@@ -30,6 +30,21 @@
     <ClCompile Include="MobTypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="explosion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tower.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ghost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mob.h">
@@ -50,6 +65,21 @@
     <ClInclude Include="MobTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="explosion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tower.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ghost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\MenuScreen.png">
@@ -59,6 +89,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Resources\ship.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\explosion.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\towers.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\arcaneBlast.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
