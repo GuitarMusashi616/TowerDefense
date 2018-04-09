@@ -40,7 +40,6 @@ void Framework::handleEvents(sf::Window & app, sf::Event & event) const
     {
         //Keep game to scale
         sf::Vector2u newSize(app.getSize().y * _aspectRatio, app.getSize().y);
-        
         app.setSize(newSize);
     }
     

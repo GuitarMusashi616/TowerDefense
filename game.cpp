@@ -33,8 +33,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     //Base window size:
     float xSize0 = framework.getWindowX();
     float ySize0 = framework.getWindowY();
-    float xViewSize = xSize0 - 100;
-    float yViewSize = ySize0;
+    sf::Vector2<float> viewSize = framework.getViewSize();
+
     
 
 using std::string;
@@ -54,8 +54,8 @@ using std::stringstream;
 
     //Menu view:
     sf::View view1(sf::FloatRect(0, 0, xSize0, ySize0));
-    view1.setViewport(sf::FloatRect(0, 0, xViewSize / xSize0, yViewSize / ySize0));
-    view1.setSize(xViewSize, yViewSize);    
+    view1.setViewport(sf::FloatRect(0.005f, 0.005f, viewSize.x / xSize0, viewSize.y / ySize0));
+    view1.setSize(viewSize.x, viewSize.y);
 
     app.setView(view1);
 
@@ -181,7 +181,9 @@ using std::stringstream;
 				}
 			}
 			for (auto &g:boo) {
-				g->setPosition(sf::Vector2f{ sf::Mouse::getPosition(app) });
+                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+
+				g->setPosition(sf::Vector2f{worldPos});
 			}
 
 			bool ifNear;
@@ -223,7 +225,7 @@ using std::stringstream;
             
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z) {
                 if(view1.getSize().x * 1.5 > xSize0 || view1.getSize().y * scaleFactor > ySize0) {
-                    view1.setSize(xViewSize, yViewSize);
+                    view1.setSize(viewSize.x, viewSize.y);
                 } else {
                     view1.zoom(1.5);
 
@@ -237,20 +239,6 @@ using std::stringstream;
 
             }
 
-        
-			// LShift pressed: place tower on mouse cursor
-//			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
-//                cout << sf::Mouse::getPosition(app).x << "," << sf::Mouse::getPosition(app).y << endl;
-//                float x = sf::Mouse::getPosition(app).x;
-//                float y = sf::Mouse::getPosition(app).y;
-//                
-//                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Vector2i(x - 15, y - 40));
-//
-//                towersThisRound.push_back(towerFactory(t4, {(int) worldPos.x, (int) worldPos.y}));
-//			}
-            
-            
-            
             if(event.type == sf::Event::MouseButtonPressed)
             {
                 
@@ -274,17 +262,22 @@ using std::stringstream;
 				static int tCount = 0;
 				tCount++;
 				cout << "Towers: " << tCount << endl;
-				towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ sf::Mouse::getPosition(app).x,sf::Mouse::getPosition(app).y }));
+                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+
+				towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
 
 			}
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::K) {
+                
+                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+                
 				if (thePlayer.getGold() >= 1000) {
 					if (boo.size() < 1) {
-						boo.push_back(std::make_unique<Ghost>(sf::Mouse::getPosition(app).x, sf::Mouse::getPosition(app).y));
+						boo.push_back(std::make_unique<Ghost>(worldPos.x, worldPos.y));
 					}
 					else {
 						boo.erase(boo.begin());
-						towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ sf::Mouse::getPosition(app).x,sf::Mouse::getPosition(app).y }));
+						towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
 						thePlayer.setGold(thePlayer.getGold() - 1000);
 					}
 				} else {
@@ -295,9 +288,8 @@ using std::stringstream;
             //DEBUG: figure out pixel x,y location of click
             if (event.type == sf::Event::MouseButtonPressed) {
                 
-                int x{ sf::Mouse::getPosition(app).x }, y{ sf::Mouse::getPosition(app).y };
-				cout << x << ", " << y << endl;
-				animations.push_back(std::make_unique<Explosion>(t3, sf::Vector2i{ x,y }));
+                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+				animations.push_back(std::make_unique<Explosion>(t3, sf::Vector2i{ (int) worldPos.x, (int)worldPos.y }));
 				//kills mobs on click in a 200 x 2 c00 box centered on mouse position
 				//for (auto &mob: mobsThisRound) {
 				//	if (mob->getPosition().x + 100  >= (x - 74) && mob->getPosition().x - 100 <= (x - 74)) {
@@ -306,7 +298,7 @@ using std::stringstream;
 				//		}
 				//	}
 				//}
-				mobsThisRound.killBox(x,y,128,128);
+				mobsThisRound.killBox(worldPos.x, worldPos.y,128,128);
             }
         }
         
@@ -332,7 +324,7 @@ using std::stringstream;
                 }
             }
         }
-      
+    
         app.draw(circle);
 
     for (const auto &mob : mobsThisRound) {
