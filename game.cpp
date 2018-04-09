@@ -53,8 +53,8 @@ using std::stringstream;
     bool showTile = false;
 
     //Menu view:
-    sf::View view1(sf::FloatRect(0, 0, xSize0, ySize0));
-    view1.setViewport(sf::FloatRect(0.005f, 0.005f, viewSize.x / xSize0, viewSize.y / ySize0));
+    sf::View view1(sf::FloatRect(0.0f, 0.0f, xSize0, ySize0));
+    view1.setViewport(sf::FloatRect(0, 0, viewSize.x / xSize0, viewSize.y / ySize0));
     view1.setSize(viewSize.x, viewSize.y);
 
     app.setView(view1);
@@ -86,6 +86,7 @@ using std::stringstream;
 	//changeable:
 	static const int TPS = 60;
 	const int defaultSpeed = 5;
+    app.setFramerateLimit(30);
 
 	//mobs to spawn
 	//Mob shipMob{ t2,{0,0},1,1 };
@@ -152,9 +153,12 @@ using std::stringstream;
 	{
 		//fixedTimerLoop
 		auto time = timer.getElapsedTime();
+        float framerate = 1.f / (time - lastTime).asSeconds();
+
 		if ((time - lastTime).asMilliseconds() > (1. / TPS) * 1000) {
 			lastTime = time;
-			
+
+
 			//update mobs
 			for (int i = 0; i < mobsThisRound.size(); i++) {
 				auto moveTo = mobsThisRound[i]->nextPosition(shipAi);
@@ -305,7 +309,7 @@ using std::stringstream;
         // Clear screen
         app.clear();
         
-        view1.setCenter(xSize0/2, ySize0/2);
+        view1.setCenter(680/2, 500/2);
         app.setView(view1);
     
         //draw Background
@@ -350,8 +354,8 @@ using std::stringstream;
 		inGold << thePlayer.getGold();
 		inLives << thePlayer.getLife();
 		sf::Text goldText{ "Gold: " + inGold.str() ,font }, livesText{ "Lives: " + inLives.str(),font };
-		goldText.setPosition(sf::Vector2f{ 0.f,520.f });
-		livesText.setPosition(sf::Vector2f{ 0.f,560.f });
+		goldText.setPosition(sf::Vector2f{ 0.f,420.f });
+		livesText.setPosition(sf::Vector2f{ 0.f,460.f });
 		app.draw(goldText);
 		app.draw(livesText);
         // Update the window
