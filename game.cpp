@@ -41,6 +41,10 @@ int GameScreen::run(sf::RenderWindow &app) {
 	t5.loadFromFile(resourcePath() + "arcaneBlast.png");
 	sf::Sprite background{ t1 };
 
+    //Font
+    sf::Font font;
+    font.loadFromFile("OpenSans-Regular.ttf");
+
 	//stuff for keeping track of time
 	sf::Clock timer;
 	auto lastTime = sf::Time::Zero;
@@ -239,8 +243,7 @@ int GameScreen::run(sf::RenderWindow &app) {
 			app.draw(*g);
 		}
 		
-		sf::Font font;
-		font.loadFromFile(resourcePath() + "OpenSans-Regular.ttf");
+
 		stringstream inGold, inLives;
 		inGold << thePlayer.getGold();
 		inLives << thePlayer.getLife();

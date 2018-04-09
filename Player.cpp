@@ -4,7 +4,7 @@
 //
 
 #include "Player.hpp"
-Player::Player() : _life{ 100 }, _gold{ 0 } , _upgrade{ 1 }
+Player::Player() : _life{ 100 }, _gold{ 1000000 } , _upgrade{ 1 }
 {
 }
 
