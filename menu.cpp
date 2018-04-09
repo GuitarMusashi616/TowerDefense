@@ -6,6 +6,7 @@
 #include "framework.hpp"
 
 using std::cout;
+using std::endl;
 
 int MenuScreen::run(sf::RenderWindow &app, const Framework & framework) {
 
@@ -15,9 +16,9 @@ int MenuScreen::run(sf::RenderWindow &app, const Framework & framework) {
     //load textures
     
     sf::Texture t1;
-
     t1.loadFromFile(resourcePath() + "MenuScreen.png");
     
+
     sf::Sprite background{ t1 };
     //background.setScale(2, 2);
 
@@ -29,7 +30,7 @@ int MenuScreen::run(sf::RenderWindow &app, const Framework & framework) {
             
             if (event.type == sf::Event::MouseButtonPressed)
             {
-                    cout << "Mouse Clicked: Starting game!";
+                    cout << "Mouse Clicked: Starting game!" << endl;
                     return 1;
             }
         }

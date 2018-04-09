@@ -13,35 +13,32 @@ struct coord {
 	int x;
 	int y;
 };
+
 class Mob
 {
 public:
 	Mob();
+	Mob(const sf::Texture &,int);
 	Mob(const sf::Texture &,const coord &,int,int);
-	~Mob();
+	virtual ~Mob();
 	sf::Vector2f nextPosition(std::vector<coord> &);
 	sf::Sprite &getSprite();
 	void setPosition(const sf::Vector2f &moveTo);
 	void setHealth(int health);
 	coord getPosition() const;
+	//coord getCenterPosition() const;
 	int getHealth() const;
+	bool getEscaped() const;
 
 protected:
 	int _health;
 	int _speed;
 	int _positionKey;
+	bool _escaped;
 	coord _position;
 	sf::Sprite _sprite;
 };
 
-class DynamicMob : public Mob {
-	//only use with "new"
-public:
-	//DynamicMob();
-	DynamicMob(const sf::Texture &);
-	~DynamicMob();
-};
-
-Mob* mobFactory(char c,sf::Texture &texture);
+std::unique_ptr<Mob> mobFactory(char c,const sf::Texture &texture, int speed);
 
 #endif
