@@ -34,9 +34,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     float xSize0 = framework.getWindowX();
     float ySize0 = framework.getWindowY();
     sf::Vector2<float> viewSize = framework.getViewSize();
-
     
-
 using std::string;
 using std::stringstream;
 
@@ -52,11 +50,17 @@ using std::stringstream;
     //Highlight actiev tile?
     bool showTile = false;
 
-    //Menu view:
+    //Game view:
     sf::View view1(sf::FloatRect(0.0f, 0.0f, xSize0, ySize0));
     view1.setViewport(sf::FloatRect(0, 0, viewSize.x / xSize0, viewSize.y / ySize0));
     view1.setSize(viewSize.x, viewSize.y);
-
+    //Menu
+    sf::View sideMenu(sf::FloatRect(100,100,100,100));
+    sideMenu.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 0.25f));
+//    sf::RectangleShape sideBarRect;
+//    sideBarRect.setSize()
+    
+    
     app.setView(view1);
 
     Grid grid(app);
@@ -86,33 +90,7 @@ using std::stringstream;
 	//changeable:
 	static const int TPS = 60;
 	const int defaultSpeed = 5;
-    app.setFramerateLimit(30);
-
-	//mobs to spawn
-	//Mob shipMob{ t2,{0,0},1,1 };
-	//Mob shipMob2{ t2,{ 500,200 },1,1 };
-	//Ship shipMob{ t2 };
-	//Ship shipMob2{t2};
-	//Tower arcaneTower{ t4, sf::Vector2i{135,135} };
-
-    //track for mobs to follow
-
-  //  vector<coord> shipAiOld{
-  //      {94,10},
-  //      {106,92},
-  //      {217,97},
-  //      {226,19},
-  //      {340,18},
-  //      {336,195},
-  //      {223,199},
-  //      {220,380},
-  //      {342,382},
-  //      {350,302},
-  //      {453,306},
-  //      {462,375},
-  //      {630,377},
-		//{500,500},
-  //  };
+    app.setFramerateLimit(60);
 
 	Player thePlayer;
 
@@ -184,11 +162,11 @@ using std::stringstream;
 					animations.erase(animations.begin() + i);
 				}
 			}
-			for (auto &g:boo) {
-                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
-
-				g->setPosition(sf::Vector2f{worldPos});
-			}
+//			for (auto &g:boo) {
+//                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+//
+//				g->setPosition(sf::Vector2f{worldPos});
+//			}
 
 			bool ifNear;
 			sf::Time timeDelay;
@@ -203,8 +181,6 @@ using std::stringstream;
 					mobsThisRound.killBox(m.x, m.y, 192, 192);
 				}
 			}
-			
-			
         }
         
         // Process events
@@ -228,7 +204,7 @@ using std::stringstream;
             float scaleFactor = 1.5;
             
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z) {
-                if(view1.getSize().x * 1.5 > xSize0 || view1.getSize().y * scaleFactor > ySize0) {
+                if(view1.getSize().x * 1.5 >= xSize0 || view1.getSize().y * scaleFactor >= ySize0) {
                     view1.setSize(viewSize.x, viewSize.y);
                 } else {
                     view1.zoom(1.5);
@@ -261,6 +237,23 @@ using std::stringstream;
                    }
             }
             
+            if(event.type == sf::Event::MouseMoved) {
+                for (auto &g:boo) {
+                    sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+                    bool collides = false;
+                    for(auto &t : towers) {
+                        sf::Rect<float> bounds(t->getGlobalBounds());
+                        if(g->getGlobalBounds().intersects(bounds)) {
+                            collides = true;
+                        }
+                    }
+                    
+                    g->setPosition(sf::Vector2f{worldPos});
+                    g->setCollision(collides);
+
+
+                }
+            }
             
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Equal) {
 				static int tCount = 0;
@@ -280,9 +273,11 @@ using std::stringstream;
 						boo.push_back(std::make_unique<Ghost>(worldPos.x, worldPos.y));
 					}
 					else {
-						boo.erase(boo.begin());
-						towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
-						thePlayer.setGold(thePlayer.getGold() - 1000);
+                        if(!boo[0]->isOverlapping()) {
+                            boo.erase(boo.begin());
+                            towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
+                            thePlayer.setGold(thePlayer.getGold() - 1000);
+                        }
 					}
 				} else {
 					cout << "not enough gold, " << 1000 - thePlayer.getGold() << " more gold required!"  << endl;
@@ -294,14 +289,6 @@ using std::stringstream;
                 
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
 				animations.push_back(std::make_unique<Explosion>(t3, sf::Vector2i{ (int) worldPos.x, (int)worldPos.y }));
-				//kills mobs on click in a 200 x 2 c00 box centered on mouse position
-				//for (auto &mob: mobsThisRound) {
-				//	if (mob->getPosition().x + 100  >= (x - 74) && mob->getPosition().x - 100 <= (x - 74)) {
-				//		if (mob->getPosition().y +100 >= (y-64) && mob->getPosition().y - 100<= (y-64)) {
-				//			mob->setHealth(0);
-				//		}
-				//	}
-				//}
 				mobsThisRound.killBox(worldPos.x, worldPos.y,128,128);
             }
         }
@@ -309,9 +296,12 @@ using std::stringstream;
         // Clear screen
         app.clear();
         
+        app.setView(sideMenu);
+        app.draw(background);
+        
         view1.setCenter(680/2, 500/2);
         app.setView(view1);
-    
+        
         //draw Background
         app.draw(background);
     
@@ -328,6 +318,10 @@ using std::stringstream;
                 }
             }
         }
+//        if(showTile) {
+//            app.draw(Tile::getActivated()->getTile());
+//        }
+        
     
         app.draw(circle);
 
@@ -358,6 +352,9 @@ using std::stringstream;
 		livesText.setPosition(sf::Vector2f{ 0.f,460.f });
 		app.draw(goldText);
 		app.draw(livesText);
+        
+    
+        
         // Update the window
         app.display();
     }

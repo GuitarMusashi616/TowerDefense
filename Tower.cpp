@@ -42,3 +42,4 @@ void Tower::restartClock()
 {
 	_timer.restart();
 }
+
