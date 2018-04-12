@@ -1,5 +1,7 @@
 #include "Ghost.h"
 #include <iostream>
+#include <memory>
+using std::shared_ptr;
 
 Ghost::Ghost(float x, float y) : RectangleShape{}
 {
@@ -28,3 +30,9 @@ void Ghost::setCollision(bool collides) {
 }
 
 
+
+
+void Ghost::handleEvents(sf::RenderWindow & app, sf::Event & event, const Grid & grid, const Framework & framework)
+{
+    
+}

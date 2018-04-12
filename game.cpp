@@ -27,6 +27,7 @@ using std::cout;
 using std::endl;
 using std::shared_ptr;
 using std::abs;
+using std::unique_ptr;
 
 int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
@@ -294,10 +295,8 @@ using std::stringstream;
                             collides = true;
                         }
                     }
-                    
                     g->setPosition(sf::Vector2f{worldPos});
                     g->setCollision(collides);
-
                 }
             }
             
@@ -320,8 +319,14 @@ using std::stringstream;
 					}
 					else {
                         if(!boo[0]->isOverlapping()) {
+
                             boo.erase(boo.begin());
                             towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
+                            
+                            std::sort(towers.begin(), towers.end(), [](const unique_ptr<Tower> &a, const unique_ptr<Tower> &b) {
+                                return (a->getPosition().y < b->getPosition().y);
+                            });
+                            
                             thePlayer.setGold(thePlayer.getGold() - 1000);
                         }
 					}
@@ -379,6 +384,7 @@ using std::stringstream;
 			app.draw(*a);
 		}
 
+        // draw towers
 		for (const auto &t : towers) {
 			app.draw(*t);
 		}
