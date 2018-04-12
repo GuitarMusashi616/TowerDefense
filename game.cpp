@@ -55,8 +55,8 @@ using std::stringstream;
     view1.setViewport(sf::FloatRect(0, 0, viewSize.x / xSize0, viewSize.y / ySize0));
     view1.setSize(viewSize.x, viewSize.y);
     //Menu
-    sf::View sideMenu(sf::FloatRect(100,100,100,100));
-    sideMenu.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 0.25f));
+    sf::View sideMenu(sf::FloatRect(0,0,xSize0,ySize0));
+    sideMenu.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
 //    sf::RectangleShape sideBarRect;
 //    sideBarRect.setSize()
     
@@ -94,6 +94,67 @@ using std::stringstream;
 
 	Player thePlayer;
 
+    //Path collision detection
+    //90,55
+    
+    const int PATHWIDTH = 36;
+    bool showCollisionBoxes = false;
+    sf::RectangleShape box1(sf::Vector2f(190, PATHWIDTH));
+    box1.setPosition(0, 54);
+    
+    sf::RectangleShape box2(sf::Vector2f(158, PATHWIDTH));
+    box2.setPosition(268, 54);
+    
+    sf::RectangleShape box3(sf::Vector2f(PATHWIDTH, 122));
+    box3.setPosition(155, 54);
+    
+    sf::RectangleShape box4(sf::Vector2f(148, PATHWIDTH));
+    box4.setPosition(156, 140);
+    
+    sf::RectangleShape box5(sf::Vector2f(PATHWIDTH, 122));
+    box5.setPosition(268, 54);
+
+    sf::RectangleShape box6(sf::Vector2f(PATHWIDTH, 220));
+    box6.setPosition(390, 54);
+    
+    sf::RectangleShape box7(sf::Vector2f(152, PATHWIDTH));
+    box7.setPosition(274, 238);
+
+    sf::RectangleShape box8(sf::Vector2f(PATHWIDTH, 222));
+    box8.setPosition(274, 238);
+    
+    sf::RectangleShape box9(sf::Vector2f(157, PATHWIDTH));
+    box9.setPosition(274, 424);
+    
+    sf::RectangleShape box10(sf::Vector2f(PATHWIDTH, 124));
+    box10.setPosition(395, 337);
+    
+    sf::RectangleShape box11(sf::Vector2f(149, PATHWIDTH));
+    box11.setPosition(395, 337);
+    
+    sf::RectangleShape box12(sf::Vector2f(PATHWIDTH, 124));
+    box12.setPosition(508, 337);
+    
+    sf::RectangleShape box13(sf::Vector2f(200, PATHWIDTH));
+    box13.setPosition(508, 425);
+    
+    vector<sf::RectangleShape> pathCollision{
+        box1,
+        box2,
+        box3,
+        box4,
+        box5,
+        box6,
+        box7,
+        box8,
+        box9,
+        box10,
+        box11,
+        box12,
+        box13,
+    };
+    
+    
 	vector<coord> shipAi{
 		{ 170,74 },
 		{ 177,155 },
@@ -136,7 +197,6 @@ using std::stringstream;
 		if ((time - lastTime).asMilliseconds() > (1. / TPS) * 1000) {
 			lastTime = time;
 
-
 			//update mobs
 			for (int i = 0; i < mobsThisRound.size(); i++) {
 				auto moveTo = mobsThisRound[i]->nextPosition(shipAi);
@@ -162,11 +222,6 @@ using std::stringstream;
 					animations.erase(animations.begin() + i);
 				}
 			}
-//			for (auto &g:boo) {
-//                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
-//
-//				g->setPosition(sf::Vector2f{worldPos});
-//			}
 
 			bool ifNear;
 			sf::Time timeDelay;
@@ -200,6 +255,9 @@ using std::stringstream;
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
                 showTile = !showTile;
             }
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::G) {
+                showCollisionBoxes = !showCollisionBoxes;
+            }
             
             float scaleFactor = 1.5;
             
@@ -218,31 +276,20 @@ using std::stringstream;
                 cout << "Zoom Out" << endl;
 
             }
-
-            if(event.type == sf::Event::MouseButtonPressed)
-            {
-                
-                float x = sf::Mouse::getPosition(app).x;
-                float y = sf::Mouse::getPosition(app).y;
-                
-                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
-                
-                sf::Vector2<float> corrected = framework.getCorrectedMousePosition(app,x,y);
-                if(circle.getGlobalBounds().contains(worldPos.x, worldPos.y))
-                   {
-                       sf::Vector2f initPosition = circle.getPosition();
-                       circle.setRadius(circle.getRadius() + 2);
-                       circle.setPosition(200 - circle.getRadius(), 300 - circle.getRadius());
-
-                   }
-            }
             
             if(event.type == sf::Event::MouseMoved) {
                 for (auto &g:boo) {
                     sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
                     bool collides = false;
+                    
                     for(auto &t : towers) {
                         sf::Rect<float> bounds(t->getGlobalBounds());
+                        if(g->getGlobalBounds().intersects(bounds)) {
+                            collides = true;
+                        }
+                    }
+                    for(auto &collisionBox : pathCollision) {
+                        sf::Rect<float> bounds(collisionBox.getGlobalBounds());
                         if(g->getGlobalBounds().intersects(bounds)) {
                             collides = true;
                         }
@@ -250,7 +297,6 @@ using std::stringstream;
                     
                     g->setPosition(sf::Vector2f{worldPos});
                     g->setCollision(collides);
-
 
                 }
             }
@@ -290,6 +336,7 @@ using std::stringstream;
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
 				animations.push_back(std::make_unique<Explosion>(t3, sf::Vector2i{ (int) worldPos.x, (int)worldPos.y }));
 				mobsThisRound.killBox(worldPos.x, worldPos.y,128,128);
+                cout << "(" << worldPos.x << "," << worldPos.y << ")" << endl;
             }
         }
         
@@ -322,9 +369,6 @@ using std::stringstream;
 //            app.draw(Tile::getActivated()->getTile());
 //        }
         
-    
-        app.draw(circle);
-
     for (const auto &mob : mobsThisRound) {
 			if (mob->getHealth() > 0) {
 				app.draw(mob->getSprite());
@@ -342,7 +386,13 @@ using std::stringstream;
 		for (const auto &g : boo) {
 			app.draw(*g);
 		}
-		
+        
+        if(showCollisionBoxes) {
+            for (auto &b : pathCollision) {
+                b.setFillColor(sf::Color(0,0,255,100));
+                app.draw(b);
+            }
+        }
 
 		stringstream inGold, inLives;
 		inGold << thePlayer.getGold();
@@ -352,8 +402,7 @@ using std::stringstream;
 		livesText.setPosition(sf::Vector2f{ 0.f,460.f });
 		app.draw(goldText);
 		app.draw(livesText);
-        
-    
+
         
         // Update the window
         app.display();
