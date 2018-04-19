@@ -253,11 +253,9 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					//if mobs are nearby and it has been 2 seconds since the tower has fired
 					towers[i]->restartClock();
 					animations.push_back(std::make_unique<ArcaneExplosion>(t5, sf::Vector2i{ int(m.x),int(m.y) }));
-					mobsThisRound.killBox(m.x, m.y, 192, 192);
+					mobsThisRound.killCircle(m.x, m.y, 96.);
 				}
 			}
-			
-			
         }
         
         // Process events
