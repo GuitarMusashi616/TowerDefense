@@ -28,7 +28,7 @@ using std::string;
 int main()
 {
     //Grab these from a config file eventually
-    const sf::Vector2f WINDOWSIZE(780,600);
+    const sf::Vector2f WINDOWSIZE(730,500);
     const sf::Vector2f VIEWSIZE(680,500);
 
     

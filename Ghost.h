@@ -10,7 +10,6 @@ public:
     void setCollision(bool collides);
     bool isOverlapping() const;
     static void handleEvents(sf::RenderWindow & app, sf::Event & event, const Grid & grid, const Framework & framework);
-    
 private:
     bool _collides;
 };

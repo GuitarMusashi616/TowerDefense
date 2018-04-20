@@ -43,3 +43,20 @@ void Tower::restartClock()
 	_timer.restart();
 }
 
+void Tower::onClick() {
+    std::cout << this << " Tower clicked!" << std::endl;
+    
+    std::cout << _position.x << ", " << _position.y << std::endl;
+};
+
+
+sf::CircleShape Tower::getThisGhost() {
+   // cout << clickable::getGhost().
+    int radius = 50;
+    sf::CircleShape circle = getGhost();
+    //circle.setPosition(_position.x, _position.y);
+    circle.setOrigin(radius, radius);
+    circle.setPosition(_position);
+    circle.setFillColor(sf::Color(255,0,0,100));
+    return circle;
+}

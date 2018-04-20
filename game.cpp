@@ -36,8 +36,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     float ySize0 = framework.getWindowY();
     sf::Vector2<float> viewSize = framework.getViewSize();
     
-using std::string;
-using std::stringstream;
+    using std::string;
+    using std::stringstream;
 
 	//Initial game message
 	cout << "Click to Explode" << endl;
@@ -57,12 +57,10 @@ using std::stringstream;
     view1.setSize(viewSize.x, viewSize.y);
     //Menu
     sf::View sideMenu(sf::FloatRect(0,0,xSize0,ySize0));
-    sideMenu.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
-//    sf::RectangleShape sideBarRect;
-//    sideBarRect.setSize()
-    
-    
+    sideMenu.setViewport(sf::FloatRect(0, 0, 1.5f, 1.5f));
+
     app.setView(view1);
+    view1.setCenter(viewSize.x/2, viewSize.y/2);
 
     Grid grid(app);
     
@@ -185,6 +183,8 @@ using std::stringstream;
 
 	};
 
+    sf::CircleShape selectGhost;
+    
 	// List of towers added this round
 	vector<Tower*> towersThisRound{};
 
@@ -263,7 +263,7 @@ using std::stringstream;
             float scaleFactor = 1.5;
             
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z) {
-                if(view1.getSize().x * 1.5 >= xSize0 || view1.getSize().y * scaleFactor >= ySize0) {
+                if(view1.getSize().x * 1.5 >= viewSize.x || view1.getSize().y * scaleFactor >= viewSize.y) {
                     view1.setSize(viewSize.x, viewSize.y);
                 } else {
                     view1.zoom(1.5);
@@ -277,6 +277,7 @@ using std::stringstream;
                 cout << "Zoom Out" << endl;
 
             }
+
             
             if(event.type == sf::Event::MouseMoved) {
                 for (auto &g:boo) {
@@ -334,6 +335,22 @@ using std::stringstream;
 					cout << "not enough gold, " << 1000 - thePlayer.getGold() << " more gold required!"  << endl;
 				}
 			}
+            
+            if(event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+                bool clickedClickable = false;
+                for (const auto &t : towers) {
+                    if(t->getGlobalBounds().contains(worldPos.x, worldPos.y)) {
+                        t->onClick();
+                        selectGhost = t->getThisGhost();
+                        selectGhost.setRadius(50);
+                        clickedClickable = true;
+                    }
+                }
+                if(!clickedClickable) {
+                    selectGhost.setRadius(0);
+                }
+            }
 
             //DEBUG: figure out pixel x,y location of click
             if (event.type == sf::Event::MouseButtonPressed) {
@@ -350,8 +367,6 @@ using std::stringstream;
         
         app.setView(sideMenu);
         app.draw(background);
-        
-        view1.setCenter(680/2, 500/2);
         app.setView(view1);
         
         //draw Background
@@ -370,9 +385,6 @@ using std::stringstream;
                 }
             }
         }
-//        if(showTile) {
-//            app.draw(Tile::getActivated()->getTile());
-//        }
         
     for (const auto &mob : mobsThisRound) {
 			if (mob->getHealth() > 0) {
@@ -399,7 +411,7 @@ using std::stringstream;
                 app.draw(b);
             }
         }
-
+        app.draw(selectGhost);
 		stringstream inGold, inLives;
 		inGold << thePlayer.getGold();
 		inLives << thePlayer.getLife();
