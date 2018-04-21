@@ -4,13 +4,21 @@
 //
 
 #include "Player.hpp"
-Player::Player() : _life{ 100 }, _gold{ 10000 } , _upgrade{ 1 }
+
+bool Player::roundHasStarted = false;
+int Player::roundNum = 0;
+
+Player::Player() : _life{ 5 }, _gold{ 100000 } , _upgrade{ 1 }
 {
 }
 
 void Player::setLife(int Life)
 {
     _life = Life; // might add hp regen later
+	if (_life <= 0) {
+		std::cout << "Game Over" << std::endl;
+		//end game screen here
+	}
 }
 int Player::getLife() const
 {

@@ -7,6 +7,8 @@
 
 #include "Wave.h"
 #include "clickable.hpp"
+#include <memory>
+#include <vector>
 
 class Tower : public sf::Sprite, public clickable {
 public:    
@@ -16,6 +18,7 @@ public:
 	int update(Wave &);
 	sf::Time getClock() const;
 	void restartClock();
+	sf::IntRect &getIntRect();
 	//sf::Sprite &getSprite();
 	//void setPosition();
     void onClick();
@@ -29,5 +32,7 @@ private:
 	sf::Clock _timer;
 	sf::Time _lastTime;
 };
+
+bool findTower(const std::vector<std::unique_ptr<Tower>> &towers,sf::Vector2i &position);
 
 #endif // !TOWER_HPP

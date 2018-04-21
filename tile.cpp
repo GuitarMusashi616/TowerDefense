@@ -22,7 +22,7 @@ Tile::Tile(int x, int y, int tileSize)
     _position.x = x;
     _position.y = y;
     
-    sf::RectangleShape rectangle(sf::Vector2f(tileSize, tileSize));
+	sf::RectangleShape rectangle{ sf::Vector2f{float(tileSize), float(tileSize)} };
     sf::Color transparentRed(255, 0, 0, 100);
     rectangle.setFillColor(transparentRed);
     _square = rectangle;

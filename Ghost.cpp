@@ -1,17 +1,15 @@
 #include "Ghost.h"
 #include <iostream>
-#include <memory>
-using std::shared_ptr;
 
 Ghost::Ghost(float x, float y) : RectangleShape{}
 {
-	setFillColor(sf::Color{0,255,0,100});
-	setOrigin(41, 60); 
-	auto m = sf::Mouse::getPosition();
-	setPosition(x,y);
-	setSize(sf::Vector2f{ 82,120 });
-	//setOutlineThickness(5);
-	//setOutlineColor(sf::Color::Black);
+    setFillColor(sf::Color{0,255,0,100});
+    setOrigin(41, 60);
+    auto m = sf::Mouse::getPosition();
+    setPosition(x,y);
+    setSize(sf::Vector2f{ 82,120 });
+    //setOutlineThickness(5);
+    //setOutlineColor(sf::Color::Black);
 }
 
 
@@ -26,13 +24,5 @@ void Ghost::setCollision(bool collides) {
     } else {
         this->setFillColor(sf::Color{0,255,0,100});
     }
-
-}
-
-
-
-
-void Ghost::handleEvents(sf::RenderWindow & app, sf::Event & event, const Grid & grid, const Framework & framework)
-{
     
 }

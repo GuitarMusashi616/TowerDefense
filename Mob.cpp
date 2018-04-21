@@ -1,19 +1,21 @@
 #include "Mob.h"
-#include "MobTypes.h"
-#include "explosion.h"
 
-Mob::Mob() : _health{ 1 }, _speed{ 1 }, _positionKey{ 0 }, _position{ -10,70 }, _escaped{false}
+//defaults defined here
+//const int Mob::maxHealth = 5;
+const int Mob::defaultSpeed = 5;
+const sf::Vector2f startPos{ -10,70 };
+
+Mob::Mob() : _health{ 5 }, _maxHealth{ 5 }, _speed{ defaultSpeed }, _healthBar{ -10.f,70.f,108.f,10.f }
 {
 }
 
-Mob::Mob(const sf::Texture &texture, int speed) : Mob{ texture, {-10,70}, speed, speed }
+Mob::Mob(const sf::Texture &texture, int health, int speed) : _sprite{ texture }, _maxHealth{ health }, _health{ health },_speed { speed }, _healthBar{ -10.f,70.f,108.f,10.f }
 {
-}
-
-Mob::Mob(const sf::Texture &texture, const coord &position, int health, int speed) : _sprite{texture}, _health { health }, _speed{ speed }, _positionKey{ 0 }, _position{ position }, _escaped{ false }
-{
-	_sprite.setPosition(_position.x, _position.y);
-	_sprite.setOrigin(74, 64);
+	setPosition(startPos);
+	auto spriteBounds = _sprite.getGlobalBounds();
+	//defualt origin 74,64
+	_sprite.setOrigin(spriteBounds.width/2, spriteBounds.height/2);
+	//_healthBar.setSize(sf::Vector2f{spriteBounds.width,10});
 }
 
 Mob::~Mob()
@@ -55,15 +57,25 @@ sf::Sprite & Mob::getSprite()
 	return _sprite;
 }
 
+HealthBar & Mob::getHealthBar()
+{
+	return _healthBar;
+}
+
 void Mob::setPosition(const sf::Vector2f &moveTo)
 {
 	//moves the sprite
 	_sprite.setPosition(moveTo);
+	_position.x = moveTo.x;
+	_position.y = moveTo.y;
+	//subtract by sprite dimensions
+	_healthBar.setPosition3(moveTo.x - 37, moveTo.y - 54);
 }
 
 void Mob::setHealth(int health)
 {
 	_health = health;
+	_healthBar.setHealth(health/double(getMaxHealth()));
 }
 
 coord Mob::getPosition() const
@@ -86,6 +98,21 @@ bool Mob::getEscaped() const
 {
 	return _escaped;
 }
+
+int Mob::getMaxHealth() const
+{
+	return _maxHealth;
+}
+
+std::string Mob::getType() const
+{
+	return "Mob";
+}
+
+//std::unique_ptr<Explosion> Mob::getDeathAnimation(const sf::Texture &texture)
+//{
+//	return std::make_unique<Explosion>(texture, sf::Vector2i{ getPosition().x, getPosition().y });
+//}
 
 std::unique_ptr<Mob> mobFactory(char c, const sf::Texture &texture, int speed)
 {

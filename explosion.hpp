@@ -1,7 +1,9 @@
-#pragma once
+#ifndef explosion_hpp
+#define explosion_hpp
+
 #include <SFML/Graphics.hpp>
 #include <string>
-#include "game.hpp"
+#include <vector>
 
 class Explosion : public sf::Sprite {
 public:
@@ -24,3 +26,17 @@ public:
 	void update() override;
 };
 
+class KnightDeath : public Explosion {
+public:
+	KnightDeath();
+	KnightDeath(const sf::Texture &texture, const sf::Vector2<int> &position);
+	void update() override;
+private:
+	int _boxWidth;
+	int _boxHeight;
+	std::vector<sf::IntRect> _coordinatesForDeathFrames;
+	sf::Clock _timer;
+	int _i;
+};
+
+#endif

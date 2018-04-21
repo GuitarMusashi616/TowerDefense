@@ -2,10 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Mob.h"
-
-#include "Tower.hpp"
-#include "ResourcePath.hpp"
 #include <string>
 
 
@@ -45,6 +41,10 @@ int main()
 
     GameScreen screen1;
     screens.push_back(&screen1);
+
+	//GameOver 
+	MenuScreen screen2;
+	screens.push_back(&screen2);
 
     int screen = 0;
     

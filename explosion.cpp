@@ -1,4 +1,4 @@
-#include "explosion.h"
+#include "explosion.hpp"
 #include <iostream>
 
 
@@ -18,6 +18,7 @@ Explosion::Explosion(const sf::Texture &texture, const sf::Vector2<int> &positio
 Explosion::~Explosion()
 {
 }
+
 
 void Explosion::update()
 {
@@ -61,4 +62,69 @@ void ArcaneExplosion::update()
 		_frameCount++;
 	}
 	setTextureRect(_frame);
+}
+
+KnightDeath::KnightDeath() : Explosion{}, _i{ 0 }
+{
+	setOrigin(_boxWidth/2, _boxHeight/2);
+}
+
+//KnightDeath::KnightDeath(const sf::Texture & texture, const sf::Vector2<int>& position) : Explosion{ texture,position }, _i{ 0 }, _boxWidth{ 66 }, _boxHeight{ 66 }, _coordinatesForDeathFrames{
+//	{ 84,674 },
+//	{ 229,674 },
+//	{ 6,674 + 63 },
+//	{ 161,674 + 63 },
+//	{ 283,674 + 63 },
+//}
+//{
+//	int imageWidth = 370;
+//	int imageHeight = 800;
+//	int boxWidth = 73.8;
+//	int boxHeight = 72.73;
+//	_frame = sf::IntRect{_coordinatesForDeathFrames[0].x,_coordinatesForDeathFrames[0].y,_boxWidth,_boxHeight };
+//	setTextureRect(_frame);
+//	setOrigin(_boxWidth / 2, _boxHeight / 2);
+//}
+
+KnightDeath::KnightDeath(const sf::Texture & texture, const sf::Vector2<int>& position) : Explosion{ texture,position }, _i{ 0 }, _coordinatesForDeathFrames{
+	{ 84,668,70,72 },
+	{ 230,668,70,72 },
+	{ 5,739,70,54 },
+	{ 159,739,70,54 },
+	{ 284,739,70,54 },
+}
+{
+	_frame = sf::IntRect{ _coordinatesForDeathFrames[0] };
+	setTextureRect(_frame);
+	setOrigin(_coordinatesForDeathFrames[0].width/2, _coordinatesForDeathFrames[0].height / 2);
+}
+
+void KnightDeath::update()
+{
+	if (_timer.getElapsedTime().asMilliseconds() >= 150) {
+		//static bool forwards = true;
+		_timer.restart();
+		if (_i <_coordinatesForDeathFrames.size() - 1) {
+			_i++;
+			_frame = _coordinatesForDeathFrames[_i];
+			setTextureRect(_frame);
+			setOrigin(_coordinatesForDeathFrames[_i].width / 2, _coordinatesForDeathFrames[_i].height / 2);
+			//std::cout << "top, left: " << _frame.top << ", " << _frame.left << std::endl;
+		}
+		else {
+			_frameCount=17;
+			//delete
+		}
+		//if (forwards) {
+		//	i++;
+		//	if (i >= _coordinatesForDeathFrames.size()) {
+		//		forwards = false;
+		//	}
+		//} else {
+		//	i--;
+		//	if (i <= 0) {
+		//		forwards = true;
+		//	}
+		//}
+	}
 }

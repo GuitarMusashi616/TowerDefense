@@ -22,6 +22,8 @@ public:
     int getLife() const;
     int getGold() const;//might change this to Mobtype for gold drops
     int getUpgrade() const; // choices between upgrading towers or player defense. just an idea :)
+	static int roundNum;
+	static bool roundHasStarted;
     void death() const;
     
 protected:

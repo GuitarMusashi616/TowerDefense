@@ -1,12 +1,7 @@
-// Tower.cpp
-// CS202 - Spring 2018
-// Tower class for Tower Defense game
 
 #include<SFML/Graphics.hpp>
 #include <iostream>
-#include "Mob.h"
 #include "Tower.hpp"
-#include "explosion.h"
 
 Tower::Tower() : _rect{ 275,100,82,119 }, _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero } {
 	setOrigin(41, 60);
@@ -59,4 +54,22 @@ sf::CircleShape Tower::getThisGhost() {
     circle.setPosition(_position);
     circle.setFillColor(sf::Color(255,0,0,100));
     return circle;
+    
+}
+sf::IntRect & Tower::getIntRect()
+{
+	return _rect;
+}
+
+bool findTower(const std::vector<std::unique_ptr<Tower>> &towers, sf::Vector2i &position)
+{
+	for (auto i = 0; i < towers.size(); i++) {
+		auto towerBounds = towers[i]->getGlobalBounds();
+		if (towerBounds.left <= position.x && (towerBounds.left + towerBounds.width) >= position.x) {
+			if (towerBounds.top <= position.y && (towerBounds.top + towerBounds.height) >= position.y) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
