@@ -2,6 +2,7 @@
 #include<SFML/Graphics.hpp>
 #include <iostream>
 #include "Tower.hpp"
+#include <memory>
 
 Tower::Tower() : _rect{ 275,100,82,119 }, _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero } {
 	setOrigin(41, 60);
@@ -39,29 +40,31 @@ void Tower::restartClock()
 }
 
 void Tower::onClick() {
-    std::cout << this << " Tower clicked!" << std::endl;
+    std::shared_ptr<Clickable> clicked = shared_from_this();
+    Clickable::select(clicked);
     
-    std::cout << _position.x << ", " << _position.y << std::endl;
 };
 
-
 sf::CircleShape Tower::getThisGhost() {
-   // cout << clickable::getGhost().
     int radius = 50;
     sf::CircleShape circle = getGhost();
-    //circle.setPosition(_position.x, _position.y);
     circle.setOrigin(radius, radius);
     circle.setPosition(_position);
     circle.setFillColor(sf::Color(255,0,0,100));
     return circle;
     
 }
+
+void Tower::setActive() {
+    Clickable::select(shared_from_this());
+}
+
 sf::IntRect & Tower::getIntRect()
 {
 	return _rect;
 }
 
-bool findTower(const std::vector<std::unique_ptr<Tower>> &towers, sf::Vector2i &position)
+bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &position)
 {
 	for (auto i = 0; i < towers.size(); i++) {
 		auto towerBounds = towers[i]->getGlobalBounds();

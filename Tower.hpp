@@ -10,8 +10,8 @@
 #include <memory>
 #include <vector>
 
-class Tower : public sf::Sprite, public clickable {
-public:    
+class Tower : public sf::Sprite, public Clickable {
+public:
 	Tower();
 	Tower(const sf::Texture &, const sf::Vector2i &);
 	~Tower();
@@ -22,6 +22,7 @@ public:
 	//sf::Sprite &getSprite();
 	//void setPosition();
     void onClick();
+    void setActive();
     sf::Sprite _getSprite();
     sf::CircleShape getThisGhost();
 private:
@@ -33,6 +34,6 @@ private:
 	sf::Time _lastTime;
 };
 
-bool findTower(const std::vector<std::unique_ptr<Tower>> &towers,sf::Vector2i &position);
+bool findTower(const std::vector<std::shared_ptr<Tower>> &towers,sf::Vector2i &position);
 
 #endif // !TOWER_HPP
