@@ -1,6 +1,4 @@
 #include "Mob.h"
-#include "MobTypes.h"
-#include "explosion.h"
 
 //defaults defined here
 //const int Mob::maxHealth = 5;

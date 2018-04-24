@@ -6,11 +6,12 @@
 #define TOWER_HPP_
 
 #include "Wave.h"
+#include "clickable.hpp"
 #include <memory>
 #include <vector>
 
-class Tower : public sf::Sprite {
-public:
+class Tower : public sf::Sprite, public clickable {
+public:    
 	Tower();
 	Tower(const sf::Texture &, const sf::Vector2i &);
 	~Tower();
@@ -20,6 +21,9 @@ public:
 	sf::IntRect &getIntRect();
 	//sf::Sprite &getSprite();
 	//void setPosition();
+    void onClick();
+    sf::Sprite _getSprite();
+    sf::CircleShape getThisGhost();
 private:
 	sf::Vector2f _position;
 	sf::Sprite _sprite;

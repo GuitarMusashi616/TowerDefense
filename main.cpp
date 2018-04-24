@@ -2,10 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Mob.h"
-
-#include "Tower.hpp"
-#include "ResourcePath.hpp"
 #include <string>
 
 
@@ -20,15 +16,15 @@ using std::endl;
 using std::vector;
 using std::string;
 
-string resourcePath() {
-	//comment out if on mac!
-	return "Resources/";
-}
+//string resourcePath() {
+//	//comment out if on mac!
+//	return "Resources/";
+//}
 
 int main()
 {
     //Grab these from a config file eventually
-    const sf::Vector2f WINDOWSIZE(780,600);
+    const sf::Vector2f WINDOWSIZE(730,500);
     const sf::Vector2f VIEWSIZE(680,500);
 
     

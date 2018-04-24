@@ -1,4 +1,5 @@
-#pragma once
+#ifndef Mob_h
+#define Mob_h
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include <memory>
 #include "HealthBar.h"
 
+<<<<<<< HEAD
 #ifndef Mob_h
 #define Mob_h
 
@@ -16,6 +18,8 @@ struct creep {
 	int millisecondsBetween = 200;
 };
 
+=======
+>>>>>>> 02ecf2554b96c75229456a59fe9866733ad1a00e
 struct coord {
 	//stores an x,y coordinate from the game window
 	int x;

@@ -1,9 +1,9 @@
-#pragma once
+#ifndef explosion_hpp
+#define explosion_hpp
+
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
-#include "Mob.h"
-#include "game.hpp"
 
 class Explosion : public sf::Sprite {
 public:
@@ -38,3 +38,5 @@ private:
 	sf::Clock _timer;
 	int _i;
 };
+
+#endif

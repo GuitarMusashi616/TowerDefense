@@ -1,10 +1,3 @@
-//
-//  tile.hpp
-//  TDcs
-//
-//  Created by Rowan Biessel on 4/3/18.
-//  Copyright © 2018 Rowan Biessel. All rights reserved.
-//
 
 #ifndef tile_hpp
 #define tile_hpp

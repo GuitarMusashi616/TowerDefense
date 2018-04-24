@@ -8,7 +8,7 @@
 bool Player::roundHasStarted = false;
 int Player::roundNum = 0;
 
-Player::Player() : _life{ 5 }, _gold{ 0 } , _upgrade{ 1 }
+Player::Player() : _life{ 5 }, _gold{ 100000 } , _upgrade{ 1 }
 {
 }
 

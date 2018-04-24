@@ -1,4 +1,4 @@
-#include "explosion.h"
+#include "explosion.hpp"
 #include <iostream>
 
 
@@ -18,6 +18,7 @@ Explosion::Explosion(const sf::Texture &texture, const sf::Vector2<int> &positio
 Explosion::~Explosion()
 {
 }
+
 
 void Explosion::update()
 {

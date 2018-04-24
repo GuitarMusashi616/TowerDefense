@@ -11,7 +11,6 @@ class GameScreen : public Screens
 {
 public:
     int run(sf::RenderWindow &app, const Framework & framework);
-    
 };
 
 

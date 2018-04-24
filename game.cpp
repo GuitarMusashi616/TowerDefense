@@ -9,20 +9,16 @@
 #include <sstream>
  
 #include "ResourcePath.hpp"
-#include "Mob.h"
 #include "MobTypes.h"
 #include "game.hpp"
 #include "grid.hpp"
 #include "tile.hpp"
-#include "Tower.hpp"
 #include "framework.hpp"
-
-#include "explosion.h"
-#include "Tower.hpp"
 #include "Wave.h"
 #include "Player.hpp"
 #include "Ghost.h"
 #include "Towers.hpp"
+#include "explosion.hpp"
 
 using std::vector;
 using std::cout;
@@ -38,10 +34,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     float ySize0 = framework.getWindowY();
     sf::Vector2<float> viewSize = framework.getViewSize();
 
-    
-
-	using std::string;
-	using std::stringstream;
+    using std::string;
+    using std::stringstream;
 
 	//Initial game message
 	cout << "Click to Explode" << endl;
@@ -65,7 +59,12 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     view1.setViewport(sf::FloatRect(0, 0, viewSize.x / xSize0, viewSize.y / ySize0));
     view1.setSize(viewSize.x, viewSize.y);
 
+    //Menu
+    sf::View sideMenu(sf::FloatRect(0,0,xSize0,ySize0));
+    sideMenu.setViewport(sf::FloatRect(0, 0, 1.5f, 1.5f));
+
     app.setView(view1);
+    view1.setCenter(viewSize.x/2, viewSize.y/2);
 
     Grid grid(app);
     
@@ -100,31 +99,62 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     app.setFramerateLimit(30);
 	sf::Time explosionCooldown = sf::Time::Zero;
 
-	//mobs to spawn
-	//Mob shipMob{ t2,{0,0},1,1 };
-	//Mob shipMob2{ t2,{ 500,200 },1,1 };
-	//Ship shipMob{ t2 };
-	//Ship shipMob2{t2};
-	//Tower arcaneTower{ t4, sf::Vector2i{135,135} };
-
-    //track for mobs to follow
-
-  //  vector<coord> shipAiOld{
-  //      {94,10},
-  //      {106,92},
-  //      {217,97},
-  //      {226,19},
-  //      {340,18},
-  //      {336,195},
-  //      {223,199},
-  //      {220,380},
-  //      {342,382},
-  //      {350,302},
-  //      {453,306},
-  //      {462,375},
-  //      {630,377},
-		//{500,500},
-  //  };
+    const int PATHWIDTH = 36;
+    bool showCollisionBoxes = false;
+    sf::RectangleShape box1(sf::Vector2f(190, PATHWIDTH));
+    box1.setPosition(0, 54);
+    
+    sf::RectangleShape box2(sf::Vector2f(158, PATHWIDTH));
+    box2.setPosition(268, 54);
+    
+    sf::RectangleShape box3(sf::Vector2f(PATHWIDTH, 122));
+    box3.setPosition(155, 54);
+    
+    sf::RectangleShape box4(sf::Vector2f(148, PATHWIDTH));
+    box4.setPosition(156, 140);
+    
+    sf::RectangleShape box5(sf::Vector2f(PATHWIDTH, 122));
+    box5.setPosition(268, 54);
+    
+    sf::RectangleShape box6(sf::Vector2f(PATHWIDTH, 220));
+    box6.setPosition(390, 54);
+    
+    sf::RectangleShape box7(sf::Vector2f(152, PATHWIDTH));
+    box7.setPosition(274, 238);
+    
+    sf::RectangleShape box8(sf::Vector2f(PATHWIDTH, 222));
+    box8.setPosition(274, 238);
+    
+    sf::RectangleShape box9(sf::Vector2f(157, PATHWIDTH));
+    box9.setPosition(274, 424);
+    
+    sf::RectangleShape box10(sf::Vector2f(PATHWIDTH, 124));
+    box10.setPosition(395, 337);
+    
+    sf::RectangleShape box11(sf::Vector2f(149, PATHWIDTH));
+    box11.setPosition(395, 337);
+    
+    sf::RectangleShape box12(sf::Vector2f(PATHWIDTH, 124));
+    box12.setPosition(508, 337);
+    
+    sf::RectangleShape box13(sf::Vector2f(200, PATHWIDTH));
+    box13.setPosition(508, 425);
+    
+    vector<sf::RectangleShape> pathCollision{
+        box1,
+        box2,
+        box3,
+        box4,
+        box5,
+        box6,
+        box7,
+        box8,
+        box9,
+        box10,
+        box11,
+        box12,
+        box13,
+    };
 
 	Player thePlayer;
 	//SoundEffects soundEffects;
@@ -191,7 +221,15 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
 	};
 
+<<<<<<< HEAD
 	int mobSendIterator = 0;
+=======
+    sf::CircleShape selectGhost;
+    
+	// List of towers added this round
+	vector<Tower*> towersThisRound{};
+
+>>>>>>> 02ecf2554b96c75229456a59fe9866733ad1a00e
     // Start the game loop
 	while (app.isOpen())
 	{
@@ -315,7 +353,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             float scaleFactor = 1.5;
             
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z) {
-                if(view1.getSize().x * 1.5 > xSize0 || view1.getSize().y * scaleFactor > ySize0) {
+                if(view1.getSize().x * 1.5 >= viewSize.x || view1.getSize().y * scaleFactor >= viewSize.y) {
                     view1.setSize(viewSize.x, viewSize.y);
                 } else {
                     view1.zoom(1.5);
@@ -330,6 +368,29 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
             }
 
+            
+            if(event.type == sf::Event::MouseMoved) {
+                for (auto &g:boo) {
+                    sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+                    bool collides = false;
+                    
+                    for(auto &t : towers) {
+                        sf::Rect<float> bounds(t->getGlobalBounds());
+                        if(g->getGlobalBounds().intersects(bounds)) {
+                            collides = true;
+                        }
+                    }
+                    for(auto &collisionBox : pathCollision) {
+                        sf::Rect<float> bounds(collisionBox.getGlobalBounds());
+                        if(g->getGlobalBounds().intersects(bounds)) {
+                            collides = true;
+                        }
+                    }
+                    g->setPosition(sf::Vector2f{worldPos});
+                    g->setCollision(collides);
+                }
+            }
+            
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
 				if (!thePlayer.roundHasStarted) {
 					if (thePlayer.roundNum < mobOrder.size()) {
@@ -340,6 +401,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					}
 				}
 			}
+                
 
             if(event.type == sf::Event::MouseButtonPressed)
             {
@@ -386,47 +448,70 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					cout << "not enough gold, " << 150 - thePlayer.getGold() << " more gold required!"  << endl;
 				}
 			}
+            
+            if(event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
+                bool clickedClickable = false;
+                for (const auto &t : towers) {
+                    if(t->getGlobalBounds().contains(worldPos.x, worldPos.y)) {
+                        t->onClick();
+                        selectGhost = t->getThisGhost();
+                        selectGhost.setRadius(50);
+                        clickedClickable = true;
+                    }
+                }
+                if(!clickedClickable) {
+                    selectGhost.setRadius(0);
+                }
+            }
+            
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::G) {
+                showCollisionBoxes = !showCollisionBoxes;
+            }
 
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S) {
-				//Sell Tower
-				auto m = sf::Mouse::getPosition(app);
-				//Check if a Tower has been clicked
-				//bool ifFound = findTower(towers, m);
-				int iterValue;
-				bool ifFound = towers.findTower(m,iterValue);
-				if (ifFound) {
-					cout << "Tower Sold" << endl;
-					towers.deleteTower(iterValue);
-					thePlayer.setGold(thePlayer.getGold() + 60);
-				}
-				else {
-					cout << "No Tower Selected" << endl;
-				}
-				
-			}
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U) {
-				//Upgrade Tower
-				auto m = sf::Mouse::getPosition(app);
-				int iterValue;
-				bool ifFound = towers.findTower(m, iterValue);
-				if (ifFound) {
-					cout << "Tower Upgraded" << endl;
-					auto &intRect = towers[iterValue]->getIntRect();
-					//275, 100 original position for default tower in towers.png image
-					//size of all 10 towers fit in a 380 by 214 box
-					if (intRect.left < 380 + 275) {
-						intRect.left += 76;
-					} else if (intRect.top < 100 + 107) {
-						intRect.left = 275;
-						intRect.top += 107;
-					}
-					//how many pixels over to the next tower in the towers.png image
-					towers[iterValue]->setTextureRect(intRect);
-				}
-				else {
-					cout << "No Tower Selected" << endl;
-				}
-			}
+//			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S) {
+//				//Sell Tower
+//				auto m = sf::Mouse::getPosition(app);
+//				//Check if a Tower has been clicked
+//				//bool ifFound = findTower(towers, m);
+//				int iterValue;
+//				bool ifFound = towers.findTower(m,iterValue);
+//				if (ifFound) {
+//					cout << "Tower Sold" << endl;
+//					towers.deleteTower(iterValue);
+//					thePlayer.setGold(thePlayer.getGold() + 60);
+//				}
+//				else {
+//					cout << "No Tower Selected" << endl;
+//				}
+//				
+//			}
+//			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U) {
+//				//Upgrade Tower
+//				auto m = sf::Mouse::getPosition(app);
+//				int iterValue;
+//				bool ifFound = towers.findTower(m, iterValue);
+//				if (ifFound) {
+//					cout << "Tower Upgraded" << endl;
+//					auto &intRect = towers[iterValue]->getIntRect();
+//					//275, 100 original position for default tower in towers.png image
+//					//size of all 10 towers fit in a 380 by 214 box
+//					if (intRect.left < 380 + 275) {
+//						intRect.left += 76;
+//					} else if (intRect.top < 100 + 107) {
+//						intRect.left = 275;
+//						intRect.top += 107;
+//					}
+//					//how many pixels over to the next tower in the towers.png image
+//					towers[iterValue]->setTextureRect(intRect);
+//				}
+//				else {
+//					cout << "No Tower Selected" << endl;
+//				}
+//			}
+            
+            
+            
             //DEBUG: figure out pixel x,y location of click
             if (event.type == sf::Event::MouseButtonPressed) {
                 
@@ -442,6 +527,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
         // Clear screen
         app.clear();
         
+        app.setView(sideMenu);
+        app.draw(background);
         view1.setCenter(680/2, 500/2);
         app.setView(view1);
     
@@ -461,8 +548,6 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                 }
             }
         }
-    
-        app.draw(circle);
 
 		for (int i = mobsThisRound.size()-1; i >= 0; i--) {
 			//first mobs drawn on top
@@ -488,7 +573,14 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 		for (const auto &g : boo) {
 			app.draw(*g);
 		}
-		
+        
+        if(showCollisionBoxes) {
+            for (auto &b : pathCollision) {
+                b.setFillColor(sf::Color(0,0,255,100));
+                app.draw(b);
+            }
+        }
+        app.draw(selectGhost);
 
 		stringstream inGold, inLives;
 		inGold << thePlayer.getGold();
