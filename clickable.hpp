@@ -7,17 +7,22 @@
 #include <memory>
 
 
-class clickable {
+class Clickable : public std::enable_shared_from_this<Clickable> {
 public:
-    clickable();
+    Clickable();
     virtual void onClick() =0;
     sf::CircleShape getGhost();
-    void select();
-    std::unique_ptr<clickable> getSelected();
-    
+    static void select(std::shared_ptr<Clickable> clicked);
+    static std::shared_ptr<Clickable> getSelected();
 private:
-    static std::unique_ptr<clickable> _clicked;
+    static std::shared_ptr<Clickable> _selected;
     sf::CircleShape _ghost;
+protected:
+    template <typename Derived>
+    std::shared_ptr<Derived> shared_from_base()
+    {
+        return std::static_pointer_cast<Derived>(shared_from_this());
+    }
 };
 
 #endif /* clickable_hpp */

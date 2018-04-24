@@ -6,7 +6,7 @@
 #include <memory>
 #include "Tower.hpp"
 
-class Towers : public std::vector <std::unique_ptr<Tower> >
+class Towers : public std::vector <std::shared_ptr<Tower> >
 {
 public:
 	bool findTower(const sf::Vector2i &position, int &iteratorValue) const;

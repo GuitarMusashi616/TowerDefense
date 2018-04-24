@@ -63,11 +63,14 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     sf::View sideMenu(sf::FloatRect(0,0,xSize0,ySize0));
     sideMenu.setViewport(sf::FloatRect(0, 0, 1.5f, 1.5f));
 
+    //Views
     app.setView(view1);
     view1.setCenter(viewSize.x/2, viewSize.y/2);
 
+    //Grid
     Grid grid(app);
     
+    //Random Circle
     sf::CircleShape circle(30);
     circle.setPosition(200 - circle.getRadius(), 300 - circle.getRadius());
     sf::Color transparentRed(255, 0, 0, 100);
@@ -88,6 +91,22 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     sf::Font font;
     font.loadFromFile(resourcePath() + "OpenSans-Regular.ttf");
 
+    //Clickable Texts
+    
+    stringstream inGold, inLives;
+
+    sf::Text sell{"Sell", font};
+    sf::Text upgrade{"Upgrade", font};
+    
+    sell.setPosition(sf::Vector2f{ 0.f,320.f });
+    upgrade.setPosition(sf::Vector2f{ 0.f,360.f });
+    
+    vector<sf::Text> menu {
+        sell,
+        upgrade
+    };
+    
+ 
 	//stuff for keeping track of time
 	sf::Clock timer;
 	auto lastTime = sf::Time::Zero;
@@ -398,26 +417,6 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					}
 				}
 			}
-                
-
-            if(event.type == sf::Event::MouseButtonPressed)
-            {
-                
-                float x = sf::Mouse::getPosition(app).x;
-                float y = sf::Mouse::getPosition(app).y;
-                
-                sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
-                
-                sf::Vector2<float> corrected = framework.getCorrectedMousePosition(app,x,y);
-                if(circle.getGlobalBounds().contains(worldPos.x, worldPos.y))
-                   {
-                       sf::Vector2f initPosition = circle.getPosition();
-                       circle.setRadius(circle.getRadius() + 2);
-                       circle.setPosition(200 - circle.getRadius(), 300 - circle.getRadius());
-
-                   }
-            }
-            
             
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Equal) {
 				static int tCount = 0;
@@ -425,7 +424,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 				cout << "Towers: " << tCount << endl;
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
 
-				towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
+				towers.push_back(std::make_shared<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
 
 			}
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num1) {
@@ -438,7 +437,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					}
 					else {
 						boo.erase(boo.begin());
-						towers.push_back(std::make_unique<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
+						towers.push_back(std::make_shared<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
 						thePlayer.setGold(thePlayer.getGold() - 150);
 					}
 				} else {
@@ -449,6 +448,23 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             if(event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
                 bool clickedClickable = false;
+                for(const auto &item : menu) {
+                    if(item.getGlobalBounds().contains(worldPos.x, worldPos.y)) {
+                        if(selectGhost.getRadius()) {
+                            if(item.getString() == "Sell") {
+                                cout << "Sell Tower Here." << endl;
+                                //Sell Tower Function
+                                cout << "Tower: " << Clickable::getSelected() << endl;
+                            }
+                            if(item.getString() == "Upgrade") {
+                                cout << "Upgrade Tower Here." << endl;
+                                //Upgrade Tower Function
+                                cout << "Tower: " << Clickable::getSelected() << endl;
+                            }
+                            clickedClickable = true;
+                        }
+                    }
+                }
                 for (const auto &t : towers) {
                     if(t->getGlobalBounds().contains(worldPos.x, worldPos.y)) {
                         t->onClick();
@@ -553,12 +569,19 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 			app.draw(mobsThisRound[i]->getHealthBar().getRemaining());
 			app.draw(mobsThisRound[i]->getHealthBar().getLost());
 		}
-		//for (const auto &mob : mobsThisRound) {
-		//	if (mob->getHealth() > 0) {
-		//		app.draw(mob->getSprite());
-		//	}
-		//}
 
+        
+        
+        if(selectGhost.getRadius()) {
+            for (auto & item : menu) {
+                item.setFillColor(sf::Color::Blue);
+            }
+        } else {
+            for (auto & item : menu) {
+                item.setFillColor(sf::Color(0,0,0,40));
+            }
+        }
+        
 		for (const auto &a : animations) {
 			app.draw(*a);
 		}
@@ -570,6 +593,11 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 		for (const auto &g : boo) {
 			app.draw(*g);
 		}
+        for (const auto &item : menu) {
+            app.draw(item);
+            //Drawing item
+        }
+        
         
         if(showCollisionBoxes) {
             for (auto &b : pathCollision) {
@@ -585,6 +613,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 		sf::Text goldText{ "Gold: " + inGold.str() ,font }, livesText{ "Lives: " + inLives.str(),font };
 		goldText.setPosition(sf::Vector2f{ 0.f,420.f });
 		livesText.setPosition(sf::Vector2f{ 0.f,460.f });
+       
+        
 		app.draw(goldText);
 		app.draw(livesText);
         // Update the window
