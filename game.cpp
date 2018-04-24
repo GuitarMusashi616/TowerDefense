@@ -221,15 +221,12 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
 	};
 
-<<<<<<< HEAD
 	int mobSendIterator = 0;
-=======
     sf::CircleShape selectGhost;
     
 	// List of towers added this round
 	vector<Tower*> towersThisRound{};
 
->>>>>>> 02ecf2554b96c75229456a59fe9866733ad1a00e
     // Start the game loop
 	while (app.isOpen())
 	{
