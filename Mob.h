@@ -10,6 +10,12 @@
 #ifndef Mob_h
 #define Mob_h
 
+struct creep {
+	std::string mobType;
+	int count = 1;
+	int millisecondsBetween = 200;
+};
+
 struct coord {
 	//stores an x,y coordinate from the game window
 	int x;
@@ -20,7 +26,7 @@ class Mob
 {
 public:
 	Mob();
-	Mob(const sf::Texture &,int health=5, int speed=defaultSpeed);
+	Mob(const sf::Texture &,int health=5, int speed=5);
 	virtual ~Mob();
 	sf::Vector2f nextPosition(std::vector<coord> &);
 	sf::Sprite &getSprite();
@@ -35,7 +41,7 @@ public:
 	//std::unique_ptr<Explosion> getDeathAnimation(const sf::Texture &texture);
 	//defaults declared here
 	//static const int maxHealth;
-	static const int defaultSpeed;
+	//static const int defaultSpeed;
 	std::string virtual getType() const;
 protected:
 	int _health;

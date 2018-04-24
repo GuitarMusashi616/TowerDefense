@@ -4,10 +4,10 @@
 
 //defaults defined here
 //const int Mob::maxHealth = 5;
-const int Mob::defaultSpeed = 5;
+//const int Mob::defaultSpeed = 5;
 const sf::Vector2f startPos{ -10,70 };
 
-Mob::Mob() : _health{ 5 }, _maxHealth{ 5 }, _speed{ defaultSpeed }, _healthBar{ -10.f,70.f,108.f,10.f }
+Mob::Mob() : _health{ 5 }, _maxHealth{ 5 }, _speed{ 5 }, _healthBar{ -10.f,70.f,108.f,10.f }
 {
 }
 
