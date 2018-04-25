@@ -423,16 +423,30 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                 bool clickedClickable = false;
                 for(const auto &item : menu) {
                     if(item.getGlobalBounds().contains(worldPos.x, worldPos.y)) {
+                        
                         if(selectGhost.getRadius()) {
+                            
+                            shared_ptr<Clickable> clickable = Clickable::getSelected();
+                            shared_ptr<Tower> clickableTower = std::static_pointer_cast<Tower>(clickable);
+
                             if(item.getString() == "Sell") {
-                                cout << "Sell Tower Here." << endl;
-                                //Sell Tower Function
+                               
+                                int iterValue;
+                                
+                                bool ifFound = towers.findTowerByPointer(clickableTower, iterValue);
+                                if (ifFound) {
+                                    cout << "Tower Sold" << endl;
+                                    towers.deleteTower(iterValue);
+                                    thePlayer.setGold(thePlayer.getGold() + 60);
+                                    selectGhost.setRadius(0);
+                                }
+                                else {
+                                    cout << "No Tower Selected" << endl;
+                                }
+                                
                                 cout << "Tower: " << Clickable::getSelected() << endl;
                             }
                             if(item.getString() == "Upgrade") {
-                                shared_ptr<Clickable> clickable = Clickable::getSelected();
-                                shared_ptr<Tower> clickableTower = std::static_pointer_cast<Tower>(clickable);
-                                //shared_ptr< Tower > pd = std::dynamic_pointer_cast< Tower >(pb);
                                 clickableTower->upgrade();
                             }
                             clickedClickable = true;

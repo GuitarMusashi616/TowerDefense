@@ -29,7 +29,8 @@ public:
     sf::CircleShape getThisGhost();
     void upgrade();
     sf::FloatRect getCollisionBox();
-    //void sell(Towers & towers, Player & thePlayer);
+    void sell(const std::vector<std::shared_ptr<Tower>> &towers);
+
 private:
 	sf::Vector2f _position;
 	sf::Sprite _sprite;

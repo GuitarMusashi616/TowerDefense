@@ -91,12 +91,6 @@ void Tower::upgrade() {
     this->setTextureRect(intRect);
 }
 
-//void Tower::sell(Towers & towers, Player & thePlayer) {
-//    std::cout << "Tower Sold" << std::endl;
-////    towers.deleteTower(iterValue);
-////    thePlayer.setGold(thePlayer.getGold() + 60);
-//}
-
 
 bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &position)
 {
