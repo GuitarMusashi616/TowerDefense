@@ -4,16 +4,26 @@
 #include "Tower.hpp"
 #include <memory>
 
-Tower::Tower() : _rect{ 275,100,82,119 }, _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero } {
-	setOrigin(41, 60);
+Tower::Tower() : _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero } {
 }
 
-Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _rect{ 275,100,82,119 }, _position{ pos }, _texture{texture}, _lastTime{ sf::Time::Zero }
+Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _position{ pos }, _texture{ texture }, _lastTime{ sf::Time::Zero }, _towerTypes{
+	{275,100,82,119},
+	{353,101,76,119},
+	{429,144,76,72},
+	{502,134,76,83},
+	{576,102,81,11},
+	{279,221,73,100},
+	{355,236,73,84},
+	{431,216,73,101},
+	{503,215,73,98},
+	{581,215,71,104},
+}
 {
 	setTexture(_texture);
 	setPosition(_position);
-	setTextureRect(_rect);
-	setOrigin(41, 60);
+	setTextureRect(_towerTypes[0]);
+	setOrigin(_towerTypes[0].width/2, _towerTypes[0].height/2);
 }
 
 Tower::~Tower(){
@@ -61,9 +71,10 @@ void Tower::setActive() {
     Clickable::select(shared_from_this());
 }
 
-sf::IntRect & Tower::getIntRect()
+void Tower::setTowerType(int numType)
 {
-	return _rect;
+	setTextureRect(_towerTypes[numType]);
+	//might need to update too
 }
 
 bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &position)
@@ -77,4 +88,19 @@ bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &
 		}
 	}
 	return false;
+}
+
+ArcherTower::ArcherTower(const sf::Texture &texture, const sf::Vector2i &position) : Tower{texture,position}
+{
+	setTextureRect(_towerTypes[1]);
+}
+
+CannonTower::CannonTower(const sf::Texture &, const sf::Vector2i &)
+{
+	setTextureRect(_towerTypes[2]);
+}
+
+CrossbowTower::CrossbowTower(const sf::Texture &, const sf::Vector2i &)
+{
+	setTextureRect(_towerTypes[3]);
 }

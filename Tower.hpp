@@ -18,21 +18,34 @@ public:
 	int update(Wave &);
 	sf::Time getClock() const;
 	void restartClock();
-	sf::IntRect &getIntRect();
-	//sf::Sprite &getSprite();
-	//void setPosition();
     void onClick();
     void setActive();
+	void setTowerType(int);
     sf::Sprite _getSprite();
     sf::CircleShape getThisGhost();
-private:
+protected:
 	sf::Vector2f _position;
 	sf::Sprite _sprite;
 	sf::IntRect _rect;
 	sf::Texture _texture;
 	sf::Clock _timer;
 	sf::Time _lastTime;
+	std::vector<sf::IntRect> _towerTypes;
 };
+
+class ArcherTower : public Tower {
+	ArcherTower(const sf::Texture &, const sf::Vector2i &);
+};
+
+class CannonTower : public Tower {
+	CannonTower(const sf::Texture &, const sf::Vector2i &);
+};
+
+class CrossbowTower : public Tower {
+	CrossbowTower(const sf::Texture &, const sf::Vector2i &);
+};
+
+
 
 bool findTower(const std::vector<std::shared_ptr<Tower>> &towers,sf::Vector2i &position);
 
