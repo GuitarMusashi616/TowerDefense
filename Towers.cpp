@@ -1,4 +1,4 @@
-#include "Towers.hpp"
+#include "Towers.h"
 
 bool Towers::findTower(const sf::Vector2i & position, int &iteratorValue) const
 {

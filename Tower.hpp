@@ -7,8 +7,10 @@
 
 #include "Wave.h"
 #include "clickable.hpp"
+#include "Player.hpp"
 #include <memory>
 #include <vector>
+
 
 class Tower : public sf::Sprite, public Clickable {
 public:
@@ -25,10 +27,14 @@ public:
     void setActive();
     sf::Sprite _getSprite();
     sf::CircleShape getThisGhost();
+    void upgrade();
+    sf::FloatRect getCollisionBox();
+    //void sell(Towers & towers, Player & thePlayer);
 private:
 	sf::Vector2f _position;
 	sf::Sprite _sprite;
 	sf::IntRect _rect;
+    sf::FloatRect _collisionBounds;
 	sf::Texture _texture;
 	sf::Clock _timer;
 	sf::Time _lastTime;

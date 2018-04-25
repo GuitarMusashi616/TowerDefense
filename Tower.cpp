@@ -3,12 +3,13 @@
 #include <iostream>
 #include "Tower.hpp"
 #include <memory>
+#include "Player.hpp"
 
-Tower::Tower() : _rect{ 275,100,82,119 }, _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero } {
+Tower::Tower() : _rect{ 275,100,82,119 }, _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero }, _collisionBounds{275,100,82,119} {
 	setOrigin(41, 60);
 }
 
-Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _rect{ 275,100,82,119 }, _position{ pos }, _texture{texture}, _lastTime{ sf::Time::Zero }
+Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _rect{ 275,100,82,119 }, _position{ pos }, _texture{texture}, _lastTime{ sf::Time::Zero }, _collisionBounds{275,100,82,119}
 {
 	setTexture(_texture);
 	setPosition(_position);
@@ -61,10 +62,41 @@ void Tower::setActive() {
     Clickable::select(shared_from_this());
 }
 
+sf::FloatRect Tower::getCollisionBox() {
+    _collisionBounds = this->getGlobalBounds();
+    _collisionBounds.height = 80;
+    _collisionBounds.width = 75;
+    _collisionBounds.top = _collisionBounds.top + 40;
+    return _collisionBounds;
+}
+
+
 sf::IntRect & Tower::getIntRect()
 {
 	return _rect;
 }
+
+void Tower::upgrade() {
+    std::cout << "Tower Upgraded" << std::endl;
+    auto &intRect = this->getIntRect();
+    //275, 100 original position for default tower in towers.png image
+    //size of all 10 towers fit in a 380 by 214 box
+    if (intRect.left < 380 + 275) {
+        intRect.left += 76;
+    } else if (intRect.top < 100 + 107) {
+        intRect.left = 275;
+        intRect.top += 107;
+    }
+    //how many pixels over to the next tower in the towers.png image
+    this->setTextureRect(intRect);
+}
+
+//void Tower::sell(Towers & towers, Player & thePlayer) {
+//    std::cout << "Tower Sold" << std::endl;
+////    towers.deleteTower(iterValue);
+////    thePlayer.setGold(thePlayer.getGold() + 60);
+//}
+
 
 bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &position)
 {

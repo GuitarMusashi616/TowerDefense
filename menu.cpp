@@ -25,7 +25,6 @@ int MenuScreen::run(sf::RenderWindow &app, const Framework & framework) {
     while(running) {
         while (app.pollEvent(event))
         {
-            
             framework.handleEvents(app, event);
             
             if (event.type == sf::Event::MouseButtonPressed)

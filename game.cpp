@@ -17,7 +17,8 @@
 #include "Wave.h"
 #include "Player.hpp"
 #include "Ghost.h"
-#include "Towers.hpp"
+#include "Towers.h"
+#include "Tower.hpp"
 #include "explosion.hpp"
 
 using std::vector;
@@ -359,7 +360,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                     bool collides = false;
                     
                     for(auto &t : towers) {
-                        sf::Rect<float> bounds(t->getGlobalBounds());
+                        sf::Rect<float> bounds(t->getCollisionBox());
                         if(g->getGlobalBounds().intersects(bounds)) {
                             collides = true;
                         }
@@ -372,7 +373,6 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                     }
                     g->setPosition(sf::Vector2f{worldPos});
                     g->setCollision(collides);
-                    cout << "Collides: " << collides << endl;
                 }
             }
             
@@ -404,7 +404,12 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					else {
                         if(!boo[0]->isOverlapping()) {
                             boo.erase(boo.begin());
-                            towers.push_back(std::make_shared<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
+                            towers.push_back(std::make_shared<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y - 20}));
+                            
+                            std::sort(towers.begin(), towers.end(), [](std::shared_ptr<Tower> a, std::shared_ptr<Tower> b) {
+                                return a->getPosition().y < b->getPosition().y;
+                            });
+                            
                             thePlayer.setGold(thePlayer.getGold() - 150);
                         }
                     }
@@ -425,9 +430,10 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                                 cout << "Tower: " << Clickable::getSelected() << endl;
                             }
                             if(item.getString() == "Upgrade") {
-                                cout << "Upgrade Tower Here." << endl;
-                                //Upgrade Tower Function
-                                cout << "Tower: " << Clickable::getSelected() << endl;
+                                shared_ptr<Clickable> clickable = Clickable::getSelected();
+                                shared_ptr<Tower> clickableTower = std::static_pointer_cast<Tower>(clickable);
+                                //shared_ptr< Tower > pd = std::dynamic_pointer_cast< Tower >(pb);
+                                clickableTower->upgrade();
                             }
                             clickedClickable = true;
                         }
@@ -550,11 +556,10 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                 item.setFillColor(sf::Color(0,0,0,40));
             }
         }
+        for (const auto &a : animations) {
+            app.draw(*a);
+        }
         
-		for (const auto &a : animations) {
-			app.draw(*a);
-		}
-
 		for (const auto &t : towers) {
 			app.draw(*t);
 		}
@@ -566,6 +571,9 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             app.draw(item);
             //Drawing item
         }
+        
+       
+
         
         
         if(showCollisionBoxes) {
@@ -579,7 +587,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 		stringstream inGold, inLives;
 		inGold << thePlayer.getGold();
 		inLives << thePlayer.getLife();
-		sf::Text goldText{ "Gold: " + inGold.str() ,font }, livesText{ "Lives: " + inLives.str(),font };
+		sf::Text goldText{ "Gold: " + inGold.str(), font }, livesText{ "Lives: " + inLives.str(),font };
 		goldText.setPosition(sf::Vector2f{ 0.f,420.f });
 		livesText.setPosition(sf::Vector2f{ 0.f,460.f });
        
