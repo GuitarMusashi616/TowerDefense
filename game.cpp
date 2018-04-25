@@ -78,7 +78,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     circle.setFillColor(transparentRed);
     
     //Load Textures
-	sf::Texture t1, t2, t3, t4, t5, t6, t7;
+	sf::Texture t1, t2, t3, t4, t5, t6, t7, tGyro, tGriffon;
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "ship.png");
 	t3.loadFromFile(resourcePath() + "explosion.png");
@@ -86,6 +86,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 	t5.loadFromFile(resourcePath() + "arcaneBlast.png");
 	t6.loadFromFile(resourcePath() + "knight.png");
 	t7.loadFromFile(resourcePath() + "footman.png");
+	tGyro.loadFromFile(resourcePath() + "gyrocopter.png");
+	tGriffon.loadFromFile(resourcePath() + "griffonRider.png");
 	sf::Sprite background{ t1 };
 
     //Font
@@ -196,19 +198,47 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 		{ 500,500 },
 	};
 
-	vector<coord> mobOrder{
-		{800, 3},
-		{600, 3},
-		{800, 5},
-		{600, 10},
-		{400, 15},
-		{200,32},
-		{50, 32},
-		{400,10},
-		{50, 50},
-		{350, 10},
-		{250, 15},
-		{50, 100},
+	//vector<coord> mobOrder{
+	//	{800, 3},
+	//	{600, 3},
+	//	{800, 5},
+	//	{600, 10},
+	//	{400, 15},
+	//	{200,32},
+	//	{50, 32},
+	//	{400,10},
+	//	{50, 50},
+	//	{350, 10},
+	//	{250, 15},
+	//	{50, 100},
+	//};
+
+	vector < vector<creep> > mobOrder{
+		//{
+		//	{ "Footman", 5, 500 },
+		//},
+		//{
+		//	{ "Footman", 10, 500 },
+		//	{ "Break", 5, 500},
+		//	{ "KnightMob", 5, 500 },
+		//},
+		{
+			{ "KnightMob", 5, 500},
+			{ "Break", 5, 200},
+			{ "Gyrocopter", 3, 700},
+			{ "Footman", 10, 200 },
+			//{ "Break", 10, 200},
+			{ "GriffonRider", 5, 800},
+		},
+		{
+			{ "Footman", 20 },
+			{"Break", 5, 200},
+			//take a break in between
+			{ "KnightMob", 10 },
+		},
+		{
+			{ "Mob", 5, 500},
+		},
 	};
 
 	Wave mobsThisRound;
@@ -225,6 +255,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
 	};
 
+	int mobSendIterator = 0;
     sf::CircleShape selectGhost;
     
 	// List of towers added this round
@@ -239,19 +270,39 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
 		if ((time - lastTime).asMilliseconds() > (1. / TPS) * 1000) {
 			lastTime = time;
-			//add mobs
+			//goes down the mobOrder vector to push all the mobs to the mobsThisRound vector
 			if (thePlayer.roundHasStarted) {
-				auto timeBetweenMobs = mobOrder[thePlayer.roundNum].x;
-				if ((time - lastMob).asMilliseconds() >= timeBetweenMobs) {
-					lastMob = time;
-					auto mobsRemaining = mobOrder[thePlayer.roundNum].y;
-					if (mobsRemaining > 0) {
-						mobsThisRound.push_back(mobFactory('s', t2, defaultSpeed));
-						mobOrder[thePlayer.roundNum].y = mobsRemaining - 1;
-					}
-					//try using references here
+				if (mobSendIterator < mobOrder[thePlayer.roundNum].size()) {
+					auto timeBetweenMobs = mobOrder[thePlayer.roundNum][mobSendIterator].millisecondsBetween;
+					if ((time - lastMob).asMilliseconds() >= timeBetweenMobs) {
+						lastMob = time;
+						auto &mobsRemaining = mobOrder[thePlayer.roundNum][mobSendIterator].count;
+						if (mobsRemaining > 0) {
+							if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Mob") {
+								mobsThisRound.push_back(std::make_unique<Mob>(t2));
+							}
+							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "KnightMob") {
+								mobsThisRound.push_back(std::make_unique<KnightMob>(t6));
+							}
+							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Footman") {
+								mobsThisRound.push_back(std::make_unique<Footman>(t7));
+							}
+							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Gyrocopter") {
+								mobsThisRound.push_back(std::make_unique<Gyrocopter>(tGyro));
+							}
+							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "GriffonRider") {
+								mobsThisRound.push_back(std::make_unique<GriffonRider>(tGriffon));
+							}
+							mobsRemaining -= 1;
+						} else {
+							mobSendIterator++;
+						}
+					} 
 				}
+				
 			}
+
+
 
 			//update mobs
 			for (int i = 0; i < mobsThisRound.size(); i++) {
@@ -264,6 +315,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					//death animation handler
 					if (mobsThisRound[i]->getType() == "KnightMob") {
 						animations.push_back(std::make_unique<KnightDeath>(t6, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
+					} else if (mobsThisRound[i]->getType() == "Footman") {
+						animations.push_back(std::make_unique<FootmanDeath>(t7, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
 					} else {
 						animations.push_back(std::make_unique<Explosion>(t3, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
 					}
@@ -279,6 +332,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					if (thePlayer.roundHasStarted && mobsThisRound.size() == 0) {
 						thePlayer.roundHasStarted = false;
 						thePlayer.roundNum++;
+						mobSendIterator = 0;
 						cout << "You survived Round " << thePlayer.roundNum - 1 << endl;
 						cout << "Press Space to start next round" << endl;
 					}
@@ -378,8 +432,12 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
 				if (!thePlayer.roundHasStarted) {
-					thePlayer.roundHasStarted = true;
-					cout << "Starting Round " << thePlayer.roundNum << endl;
+					if (thePlayer.roundNum < mobOrder.size()) {
+						thePlayer.roundHasStarted = true;
+						cout << "Starting Round " << thePlayer.roundNum << endl;
+					} else {
+						cout << "You survived all the rounds!" << endl;
+					}
 				}
 			}
             

@@ -8,7 +8,6 @@ public:
 	//KnightMob();
 	KnightMob(sf::Texture &);
 	void setPosition(const sf::Vector2f &moveTo) override;
-	std::string getType() const override;
 	//~KnightMob();
 protected:
 	sf::IntRect _intRect;
@@ -23,8 +22,7 @@ class Footman : public Mob {
 public:
 	Footman(sf::Texture &);
 	void setPosition(const sf::Vector2f &moveTo) override;
-	std::string getType() const override;
-private:
+protected:
 	sf::IntRect _intRect;
 	sf::Clock _walkTimer;
 	std::vector<coord> _spriteSheetCoordinates;
@@ -35,3 +33,12 @@ private:
 	bool _iterateDown;
 };
 
+class Gyrocopter : public Footman {
+public:
+	Gyrocopter(sf::Texture &);
+};
+
+class GriffonRider : public Footman {
+public:
+	GriffonRider(sf::Texture &);
+};

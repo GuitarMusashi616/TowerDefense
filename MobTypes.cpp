@@ -13,6 +13,7 @@ KnightMob::KnightMob(sf::Texture &texture) : Mob{ texture }
 	_lastBox = 73 * (5 - 1);
 	_firstBox = 0;
 	_millisecondsPerFrame = 200;
+	_type = "KnightMob";
 }
 
 void KnightMob::setPosition(const sf::Vector2f &moveTo)
@@ -62,11 +63,6 @@ void KnightMob::setPosition(const sf::Vector2f &moveTo)
 	_sprite.setTextureRect(_intRect);
 }
 
-std::string KnightMob::getType() const
-{
-	return "KnightMob";
-}
-
 //Footman::Footman(sf::Texture &texture) : KnightMob{ texture }, _spriteSheetCoordinates{
 //}
 //{
@@ -109,6 +105,7 @@ _spriteSheetCoordinates{
 	_maxHealth = 2;
 	_health = 2;
 	_speed = 4;
+	_type = "Footman";
 	//_millisecondsPerFrame = 200;
 }
 
@@ -151,7 +148,39 @@ void Footman::setPosition(const sf::Vector2f & moveTo)
 
 }
 
-std::string Footman::getType() const
+Gyrocopter::Gyrocopter(sf::Texture &texture) : Footman{texture}
 {
-	return "Footman";
+	_boxHeight = 79;
+	_boxWidth = 74;
+	_spriteSheetCoordinates = std::vector<coord>{
+		{227,7},
+		{227,84},
+	};
+	_type = "Gyrocopter";
+	_intRect = { _spriteSheetCoordinates[0].x,_spriteSheetCoordinates[0].y,_boxWidth,_boxHeight };
+	_sprite.setTextureRect(_intRect);
+	_sprite.setOrigin(_boxWidth / 2, _boxHeight / 2);
+	_healthBar.setSize3(80, 10);
+	_maxHealth = 7;
+	_health = 7;
+	_speed = 6;
+}
+
+GriffonRider::GriffonRider(sf::Texture &texture) : Footman{ texture }
+{
+	_boxHeight = 81;
+	_boxWidth = 82;
+	_spriteSheetCoordinates = std::vector<coord>{
+		{ 251,6 },
+		{ 251,87 },
+		{ 251,253 },
+	};
+	_type = "GriffonRider";
+	_intRect = { _spriteSheetCoordinates[0].x,_spriteSheetCoordinates[0].y,_boxWidth,_boxHeight };
+	_sprite.setTextureRect(_intRect);
+	_sprite.setOrigin(_boxWidth / 2, _boxHeight / 2);
+	_healthBar.setSize3(90, 12);
+	_maxHealth = 10;
+	_health = 10;
+	_speed = 4;
 }

@@ -16,10 +16,10 @@ using std::endl;
 using std::vector;
 using std::string;
 
-//string resourcePath() {
-//	//comment out if on mac!
-//	return "Resources/";
-//}
+string resourcePath() {
+	//comment out if on mac!
+	return "Resources/";
+}
 
 int main()
 {

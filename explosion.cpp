@@ -66,25 +66,7 @@ void ArcaneExplosion::update()
 
 KnightDeath::KnightDeath() : Explosion{}, _i{ 0 }
 {
-	setOrigin(_boxWidth/2, _boxHeight/2);
 }
-
-//KnightDeath::KnightDeath(const sf::Texture & texture, const sf::Vector2<int>& position) : Explosion{ texture,position }, _i{ 0 }, _boxWidth{ 66 }, _boxHeight{ 66 }, _coordinatesForDeathFrames{
-//	{ 84,674 },
-//	{ 229,674 },
-//	{ 6,674 + 63 },
-//	{ 161,674 + 63 },
-//	{ 283,674 + 63 },
-//}
-//{
-//	int imageWidth = 370;
-//	int imageHeight = 800;
-//	int boxWidth = 73.8;
-//	int boxHeight = 72.73;
-//	_frame = sf::IntRect{_coordinatesForDeathFrames[0].x,_coordinatesForDeathFrames[0].y,_boxWidth,_boxHeight };
-//	setTextureRect(_frame);
-//	setOrigin(_boxWidth / 2, _boxHeight / 2);
-//}
 
 KnightDeath::KnightDeath(const sf::Texture & texture, const sf::Vector2<int>& position) : Explosion{ texture,position }, _i{ 0 }, _coordinatesForDeathFrames{
 	{ 84,668,70,72 },
@@ -127,4 +109,20 @@ void KnightDeath::update()
 		//	}
 		//}
 	}
+}
+
+FootmanDeath::FootmanDeath() : KnightDeath{}
+{
+}
+
+FootmanDeath::FootmanDeath(const sf::Texture & texture, const sf::Vector2<int>& position) : KnightDeath{texture,position}
+{
+	_coordinatesForDeathFrames = std::vector<sf::IntRect>{
+		{ 81,522,69,50 },
+		{ 223,522,69,50 },
+		{ 8,568,69,50 },
+	};
+	_frame = sf::IntRect{ _coordinatesForDeathFrames[0] };
+	setTextureRect(_frame);
+	setOrigin(_coordinatesForDeathFrames[0].width / 2, _coordinatesForDeathFrames[0].height / 2);
 }
