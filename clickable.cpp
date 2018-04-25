@@ -5,10 +5,9 @@ using std::shared_ptr;
 shared_ptr<Clickable> Clickable::_selected;
 
 Clickable::Clickable() {
-    sf::CircleShape circle(50);
-    circle.setFillColor(sf::Color(0,255,0,20));
+    sf::CircleShape circle(100);
+    circle.setOutlineColor(sf::Color(0,255,0,20));
     _ghost = circle;
-    std::cout << "Created Clickable! R: " << circle.getRadius()  << std::endl;
 }
 
 sf::CircleShape Clickable::getGhost() {

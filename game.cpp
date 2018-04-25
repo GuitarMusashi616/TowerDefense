@@ -426,6 +426,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                     }
                     g->setPosition(sf::Vector2f{worldPos});
                     g->setCollision(collides);
+                    cout << "Collides: " << collides << endl;
                 }
             }
             
@@ -456,12 +457,15 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 				if (thePlayer.getGold() >= 150) {
 					if (boo.size() < 1) {
 						boo.push_back(std::make_unique<Ghost>(worldPos.x, worldPos.y));
+                        boo[0]->setCollision(true);
 					}
 					else {
-						boo.erase(boo.begin());
-						towers.push_back(std::make_shared<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
-						thePlayer.setGold(thePlayer.getGold() - 150);
-					}
+                        if(!boo[0]->isOverlapping()) {
+                            boo.erase(boo.begin());
+                            towers.push_back(std::make_shared<Tower>(t4, sf::Vector2i{ (int) worldPos.x, (int) worldPos.y }));
+                            thePlayer.setGold(thePlayer.getGold() - 150);
+                        }
+                    }
 				} else {
 					cout << "not enough gold, " << 150 - thePlayer.getGold() << " more gold required!"  << endl;
 				}
@@ -491,7 +495,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                     if(t->getGlobalBounds().contains(worldPos.x, worldPos.y)) {
                         t->onClick();
                         selectGhost = t->getThisGhost();
-                        selectGhost.setRadius(50);
+                        //selectGhost.setOrigin(t->getPosition().x, t->getPosition().y);
+                        selectGhost.setRadius(100);
                         clickedClickable = true;
                     }
                 }
@@ -504,46 +509,46 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                 showCollisionBoxes = !showCollisionBoxes;
             }
 
-//			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S) {
-//				//Sell Tower
-//				auto m = sf::Mouse::getPosition(app);
-//				//Check if a Tower has been clicked
-//				//bool ifFound = findTower(towers, m);
-//				int iterValue;
-//				bool ifFound = towers.findTower(m,iterValue);
-//				if (ifFound) {
-//					cout << "Tower Sold" << endl;
-//					towers.deleteTower(iterValue);
-//					thePlayer.setGold(thePlayer.getGold() + 60);
-//				}
-//				else {
-//					cout << "No Tower Selected" << endl;
-//				}
-//				
-//			}
-//			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U) {
-//				//Upgrade Tower
-//				auto m = sf::Mouse::getPosition(app);
-//				int iterValue;
-//				bool ifFound = towers.findTower(m, iterValue);
-//				if (ifFound) {
-//					cout << "Tower Upgraded" << endl;
-//					auto &intRect = towers[iterValue]->getIntRect();
-//					//275, 100 original position for default tower in towers.png image
-//					//size of all 10 towers fit in a 380 by 214 box
-//					if (intRect.left < 380 + 275) {
-//						intRect.left += 76;
-//					} else if (intRect.top < 100 + 107) {
-//						intRect.left = 275;
-//						intRect.top += 107;
-//					}
-//					//how many pixels over to the next tower in the towers.png image
-//					towers[iterValue]->setTextureRect(intRect);
-//				}
-//				else {
-//					cout << "No Tower Selected" << endl;
-//				}
-//			}
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S) {
+				//Sell Tower
+				auto m = sf::Mouse::getPosition(app);
+				//Check if a Tower has been clicked
+				//bool ifFound = findTower(towers, m);
+				int iterValue;
+				bool ifFound = towers.findTower(m,iterValue);
+				if (ifFound) {
+					cout << "Tower Sold" << endl;
+					towers.deleteTower(iterValue);
+					thePlayer.setGold(thePlayer.getGold() + 60);
+				}
+				else {
+					cout << "No Tower Selected" << endl;
+				}
+				
+			}
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U) {
+				//Upgrade Tower
+				auto m = sf::Mouse::getPosition(app);
+				int iterValue;
+				bool ifFound = towers.findTower(m, iterValue);
+				if (ifFound) {
+					cout << "Tower Upgraded" << endl;
+					auto &intRect = towers[iterValue]->getIntRect();
+					//275, 100 original position for default tower in towers.png image
+					//size of all 10 towers fit in a 380 by 214 box
+					if (intRect.left < 380 + 275) {
+						intRect.left += 76;
+					} else if (intRect.top < 100 + 107) {
+						intRect.left = 275;
+						intRect.top += 107;
+					}
+					//how many pixels over to the next tower in the towers.png image
+					towers[iterValue]->setTextureRect(intRect);
+				}
+				else {
+					cout << "No Tower Selected" << endl;
+				}
+			}
             
             
             
