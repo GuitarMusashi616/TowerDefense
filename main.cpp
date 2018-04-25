@@ -24,7 +24,7 @@ using std::string;
 int main()
 {
     //Grab these from a config file eventually
-    const sf::Vector2f WINDOWSIZE(730,500);
+    const sf::Vector2f WINDOWSIZE(680,500);
     const sf::Vector2f VIEWSIZE(680,500);
     
     sf::RenderWindow window(sf::VideoMode(WINDOWSIZE.x, WINDOWSIZE.y), "Rad Tower Defense", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
