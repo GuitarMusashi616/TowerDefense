@@ -31,12 +31,15 @@ public:
 	KnightDeath();
 	KnightDeath(const sf::Texture &texture, const sf::Vector2<int> &position);
 	void update() override;
-private:
-	int _boxWidth;
-	int _boxHeight;
+protected:
 	std::vector<sf::IntRect> _coordinatesForDeathFrames;
 	sf::Clock _timer;
 	int _i;
 };
 
+class FootmanDeath : public KnightDeath {
+public:
+	FootmanDeath();
+	FootmanDeath(const sf::Texture &texture, const sf::Vector2<int> &position);
+};
 #endif

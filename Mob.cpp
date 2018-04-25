@@ -106,7 +106,7 @@ int Mob::getMaxHealth() const
 
 std::string Mob::getType() const
 {
-	return "Mob";
+	return _type;
 }
 
 //std::unique_ptr<Explosion> Mob::getDeathAnimation(const sf::Texture &texture)

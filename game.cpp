@@ -77,7 +77,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     circle.setFillColor(transparentRed);
     
     //Load Textures
-	sf::Texture t1, t2, t3, t4, t5, t6, t7;
+	sf::Texture t1, t2, t3, t4, t5, t6, t7, tGyro, tGriffon;
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "ship.png");
 	t3.loadFromFile(resourcePath() + "explosion.png");
@@ -85,6 +85,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 	t5.loadFromFile(resourcePath() + "arcaneBlast.png");
 	t6.loadFromFile(resourcePath() + "knight.png");
 	t7.loadFromFile(resourcePath() + "footman.png");
+	tGyro.loadFromFile(resourcePath() + "gyrocopter.png");
+	tGriffon.loadFromFile(resourcePath() + "griffonRider.png");
 	sf::Sprite background{ t1 };
 
     //Font
@@ -211,9 +213,21 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 	//};
 
 	vector < vector<creep> > mobOrder{
+		//{
+		//	{ "Footman", 5, 500 },
+		//},
+		//{
+		//	{ "Footman", 10, 500 },
+		//	{ "Break", 5, 500},
+		//	{ "KnightMob", 5, 500 },
+		//},
 		{
-			{ "Footman", 10, 500},
 			{ "KnightMob", 5, 500},
+			{ "Break", 5, 200},
+			{ "Gyrocopter", 3, 700},
+			{ "Footman", 10, 200 },
+			//{ "Break", 10, 200},
+			{ "GriffonRider", 5, 800},
 		},
 		{
 			{ "Footman", 20 },
@@ -271,7 +285,13 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 							}
 							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Footman") {
 								mobsThisRound.push_back(std::make_unique<Footman>(t7));
-							} 
+							}
+							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Gyrocopter") {
+								mobsThisRound.push_back(std::make_unique<Gyrocopter>(tGyro));
+							}
+							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "GriffonRider") {
+								mobsThisRound.push_back(std::make_unique<GriffonRider>(tGriffon));
+							}
 							mobsRemaining -= 1;
 						} else {
 							mobSendIterator++;
@@ -294,6 +314,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					//death animation handler
 					if (mobsThisRound[i]->getType() == "KnightMob") {
 						animations.push_back(std::make_unique<KnightDeath>(t6, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
+					} else if (mobsThisRound[i]->getType() == "Footman") {
+						animations.push_back(std::make_unique<FootmanDeath>(t7, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
 					} else {
 						animations.push_back(std::make_unique<Explosion>(t3, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
 					}
