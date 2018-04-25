@@ -16,7 +16,7 @@ class Player//player class stationary position on map
 {
 public:
     Player();
-    void setLife(int life);
+    bool setLife(int life);
     void setUpgrade(int upgrade);
     void setGold(int gold);//starting gold
     int getLife() const;

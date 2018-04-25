@@ -322,7 +322,10 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					}
 					//lives lost or money gained
 					if (mobsThisRound[i]->getEscaped()) {
-						thePlayer.setLife(thePlayer.getLife() - 1);
+                        if(thePlayer.setLife(thePlayer.getLife() - 1)) {
+                            
+                            return 2;
+                        }
 					} else {
 						thePlayer.setGold(thePlayer.getGold() + 10);
 					}
@@ -569,8 +572,6 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 					cout << "No Tower Selected" << endl;
 				}
 			}
-            
-            
             
             //DEBUG: figure out pixel x,y location of click
             if (event.type == sf::Event::MouseButtonPressed) {

@@ -8,17 +8,18 @@
 bool Player::roundHasStarted = false;
 int Player::roundNum = 0;
 
-Player::Player() : _life{ 5 }, _gold{ 100000 } , _upgrade{ 1 }
+Player::Player() : _life{ 50 }, _gold{ 1000 } , _upgrade{ 1 }
 {
 }
 
-void Player::setLife(int Life)
+bool Player::setLife(int Life)
 {
     _life = Life; // might add hp regen later
 	if (_life <= 0) {
-		std::cout << "Game Over" << std::endl;
-		//end game screen here
-	}
+        return true;
+    } else {
+        return false;
+    }
 }
 int Player::getLife() const
 {
@@ -49,5 +50,6 @@ void Player::death() const
     else if(_life <= 0)
     {
         std::cout<<"Game Over"<<std::endl;//adding a gameover screen sometime later
+        
     }
 }
