@@ -46,11 +46,13 @@ void Tower::onClick() {
 };
 
 sf::CircleShape Tower::getThisGhost() {
-    int radius = 50;
+    int radius = 100;
     sf::CircleShape circle = getGhost();
     circle.setOrigin(radius, radius);
     circle.setPosition(_position);
-    circle.setFillColor(sf::Color(255,0,0,100));
+    circle.setFillColor(sf::Color(0,0,0,0));
+    circle.setOutlineColor(sf::Color(191, 23, 214, 100));
+    circle.setOutlineThickness(5);
     return circle;
     
 }
