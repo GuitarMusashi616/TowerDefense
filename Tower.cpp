@@ -94,8 +94,14 @@ int Tower::getType() const
 	return _type;
 }
 
-void Tower::upgrade() {
-    this->setTowerType(1);
+bool Tower::upgrade() {
+    if(this->getType() < 8) {
+        this->setTowerType(this->getType() + 1);
+        if(this->getType() == 4) this->setTowerType(5);
+        return true;
+    } else {
+        return false;
+    }
     std::cout << "Tower Upgraded" << std::endl;
 }
 

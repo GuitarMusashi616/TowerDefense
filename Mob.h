@@ -24,7 +24,7 @@ class Mob
 {
 public:
 	Mob();
-	Mob(const sf::Texture &,int health=5, int speed=5);
+	Mob(const sf::Texture &,int health=5, int speed=8);
 	virtual ~Mob();
 	sf::Vector2f nextPosition(std::vector<coord> &);
 	sf::Sprite &getSprite();
