@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector> 
 #include <tuple>
@@ -20,6 +21,7 @@
 #include "Towers.h"
 #include "Tower.hpp"
 #include "explosion.hpp"
+#include "SoundEffects.hpp"
 
 using std::vector;
 using std::cout;
@@ -89,6 +91,19 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 	tGyro.loadFromFile(resourcePath() + "gyrocopter.png");
 	tGriffon.loadFromFile(resourcePath() + "griffonRider.png");
 	sf::Sprite background{ t1 };
+
+	//Background Music
+	sf::Music backgroundMusic;
+	backgroundMusic.openFromFile(resourcePath() + "HSMusic.wav");
+	backgroundMusic.play();
+	backgroundMusic.setLoop(true);
+
+	//Sound Effects
+	sf::SoundBuffer s1, s2, s3, s4, s5;
+	SoundFx sfx1(s1);
+	SoundFx sfx2(s2);
+	bool load1 = true, load2 = true, load3 = true, load4 = true, load5 = true;
+
 
     //Font
     sf::Font font;
@@ -361,6 +376,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 				ifNear = mobsThisRound.detectBox(m.x,m.y, 192, 192);
 				timeDelay = towers[i]->getClock();
 				if (ifNear && (timeDelay.asSeconds() >= 2)) {
+					sfx2.pulse(load2);
+					load2 = false;
 					//if mobs are nearby and it has been 2 seconds since the tower has fired
 					towers[i]->restartClock();
 					animations.push_back(std::make_unique<ArcaneExplosion>(t5, sf::Vector2i{ int(m.x),int(m.y) }));
@@ -576,7 +593,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             
             //DEBUG: figure out pixel x,y location of click
             if (event.type == sf::Event::MouseButtonPressed) {
-                
+				sfx1.explosion(load1);
+				load1 = false;
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
 				if ((timer.getElapsedTime() - explosionCooldown).asMilliseconds() >= 500) {
 					explosionCooldown = timer.getElapsedTime();
