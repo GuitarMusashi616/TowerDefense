@@ -42,4 +42,14 @@ public:
 	FootmanDeath();
 	FootmanDeath(const sf::Texture &texture, const sf::Vector2<int> &position);
 };
+
+class GriffonDeath : public KnightDeath {
+public:
+	GriffonDeath(const sf::Texture &texture, const sf::Vector2<int> &position);
+};
+
+class GyroDeath : public KnightDeath {
+public:
+	GyroDeath(const sf::Texture &texture, const sf::Vector2<int> &position);
+};
 #endif

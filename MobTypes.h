@@ -42,3 +42,13 @@ class GriffonRider : public Footman {
 public:
 	GriffonRider(sf::Texture &);
 };
+
+class Dragon : public Footman {
+public:
+	Dragon(sf::Texture &);
+};
+
+class Devourer : public Footman {
+public:
+	Devourer(sf::Texture &);
+};

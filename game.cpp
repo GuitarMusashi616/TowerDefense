@@ -78,7 +78,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
     circle.setFillColor(transparentRed);
     
     //Load Textures
-	sf::Texture t1, t2, t3, t4, t5, t6, t7, tGyro, tGriffon;
+	sf::Texture t1, t2, t3, t4, t5, t6, t7, tGyro, tGriffon, tDragon, tDevourer;
 	t1.loadFromFile(resourcePath() + "GrassTrack.png");
 	t2.loadFromFile(resourcePath() + "ship.png");
 	t3.loadFromFile(resourcePath() + "explosion.png");
@@ -88,6 +88,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 	t7.loadFromFile(resourcePath() + "footman.png");
 	tGyro.loadFromFile(resourcePath() + "gyrocopter.png");
 	tGriffon.loadFromFile(resourcePath() + "griffonRider.png");
+	tDragon.loadFromFile(resourcePath() + "Dragon.png");
+	tDevourer.loadFromFile(resourcePath() + "Devourer.png");
 	sf::Sprite background{ t1 };
 
     //Font
@@ -214,21 +216,26 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 	//};
 
 	vector < vector<creep> > mobOrder{
-		//{
-		//	{ "Footman", 5, 500 },
-		//},
-		//{
-		//	{ "Footman", 10, 500 },
-		//	{ "Break", 5, 500},
-		//	{ "KnightMob", 5, 500 },
-		//},
+		{
+			{ "Footman", 5, 500 },
+		},
+		{
+			{ "Footman", 10, 500 },
+			{ "Break", 5, 500},
+			{ "KnightMob", 5, 500 },
+		},
 		{
 			{ "KnightMob", 5, 500},
 			{ "Break", 5, 200},
 			{ "Gyrocopter", 3, 700},
 			{ "Footman", 10, 200 },
 			//{ "Break", 10, 200},
-			{ "GriffonRider", 5, 800},
+		},
+		{
+			{"Gyrocopter", 5, 400},
+			{ "GriffonRider", 5, 400},
+			{ "Dragon", 3, 600},
+			{ "Devourer",5,400},
 		},
 		{
 			{ "Footman", 20 },
@@ -280,18 +287,19 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 						if (mobsRemaining > 0) {
 							if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Mob") {
 								mobsThisRound.push_back(std::make_unique<Mob>(t2));
-							}
-							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "KnightMob") {
+							} else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "KnightMob") {
 								mobsThisRound.push_back(std::make_unique<KnightMob>(t6));
-							}
-							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Footman") {
+							} else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Footman") {
 								mobsThisRound.push_back(std::make_unique<Footman>(t7));
-							}
-							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Gyrocopter") {
+							} else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Gyrocopter") {
 								mobsThisRound.push_back(std::make_unique<Gyrocopter>(tGyro));
-							}
-							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "GriffonRider") {
+							} else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "GriffonRider") {
 								mobsThisRound.push_back(std::make_unique<GriffonRider>(tGriffon));
+							} else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Dragon") {
+								mobsThisRound.push_back(std::make_unique<Dragon>(tDragon));
+							}
+							else if (mobOrder[thePlayer.roundNum][mobSendIterator].mobType == "Devourer") {
+								mobsThisRound.push_back(std::make_unique<Devourer>(tDevourer));
 							}
 							mobsRemaining -= 1;
 						} else {
@@ -317,7 +325,14 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 						animations.push_back(std::make_unique<KnightDeath>(t6, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
 					} else if (mobsThisRound[i]->getType() == "Footman") {
 						animations.push_back(std::make_unique<FootmanDeath>(t7, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
-					} else {
+					}
+					else if (mobsThisRound[i]->getType() == "GriffonRider") {
+						animations.push_back(std::make_unique<GriffonDeath>(tGriffon, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
+					} 
+					else if (mobsThisRound[i]->getType() == "Gyrocopter") {
+						animations.push_back(std::make_unique<GyroDeath>(tGyro, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
+					}
+					else {
 						animations.push_back(std::make_unique<Explosion>(t3, sf::Vector2i{ mobsThisRound[i]->getPosition().x, mobsThisRound[i]->getPosition().y }));
 					}
 					//lives lost or money gained
