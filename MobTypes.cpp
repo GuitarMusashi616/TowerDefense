@@ -184,3 +184,45 @@ GriffonRider::GriffonRider(sf::Texture &texture) : Footman{ texture }
 	_health = 10;
 	_speed = 4;
 }
+
+Dragon::Dragon(sf::Texture &texture) : Footman{ texture }
+{
+	_boxHeight = 80;
+	_boxWidth = 81;
+	_spriteSheetCoordinates = std::vector<coord>{
+		{ 276, 3 },
+		{ 276, 87 },
+		{ 276, 182 },
+		{ 276, 255},
+	};
+	_type = "Dragon";
+	_intRect = { _spriteSheetCoordinates[0].x,_spriteSheetCoordinates[0].y,_boxWidth,_boxHeight };
+	_sprite.setTextureRect(_intRect);
+	_sprite.setOrigin(_boxWidth / 2, _boxHeight / 2);
+	_healthBar.setSize3(90, 12);
+	_maxHealth = 10;
+	_health = 10;
+	_speed = 4;
+}
+
+Devourer::Devourer(sf::Texture &texture) : Footman{ texture }
+{
+	_boxWidth = 58;
+	_boxHeight = 67;
+	_spriteSheetCoordinates = std::vector<coord>{
+		{ 450, 100 },
+		{ 450, 185 },
+		{ 450, 273 },
+		{ 450, 356 },
+		{ 450, 443 },
+		{ 450, 529 },
+	};
+	_type = "Devourer";
+	_intRect = { _spriteSheetCoordinates[0].x,_spriteSheetCoordinates[0].y,_boxWidth,_boxHeight };
+	_sprite.setTextureRect(_intRect);
+	_sprite.setOrigin(_boxWidth / 2, _boxHeight / 2);
+	_healthBar.setSize3(90, 12);
+	_maxHealth = 10;
+	_health = 10;
+	_speed = 4;
+}

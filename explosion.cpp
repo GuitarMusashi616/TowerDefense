@@ -126,3 +126,28 @@ FootmanDeath::FootmanDeath(const sf::Texture & texture, const sf::Vector2<int>& 
 	setTextureRect(_frame);
 	setOrigin(_coordinatesForDeathFrames[0].width / 2, _coordinatesForDeathFrames[0].height / 2);
 }
+
+GriffonDeath::GriffonDeath(const sf::Texture & texture, const sf::Vector2<int>& position) : KnightDeath{ texture,position }
+{
+	_coordinatesForDeathFrames = std::vector<sf::IntRect>{
+		{ 9,586,84,113 },
+		{90,588,82,106},
+		{161,588,82,106},
+		{238,589,82,106},
+		{321,586,82,106},
+	};
+	_frame = sf::IntRect{ _coordinatesForDeathFrames[0] };
+	setTextureRect(_frame);
+	setOrigin(_coordinatesForDeathFrames[0].width / 2, _coordinatesForDeathFrames[0].height / 2);
+}
+
+GyroDeath::GyroDeath(const sf::Texture & texture, const sf::Vector2<int>& position) : KnightDeath{ texture,position }
+{
+	_coordinatesForDeathFrames = std::vector<sf::IntRect>{
+		{ 5,155,68,69 },
+		{73,155,84,76},
+	};
+	_frame = sf::IntRect{ _coordinatesForDeathFrames[0] };
+	setTextureRect(_frame);
+	setOrigin(_coordinatesForDeathFrames[0].width / 2, _coordinatesForDeathFrames[0].height / 2);
+}
