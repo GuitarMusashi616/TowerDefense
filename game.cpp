@@ -249,19 +249,19 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 			{ "KnightMob", 15, 500 },
 		},
         {
-            { "Footman", 10, 500 },
+            { "Footman", 15, 500 },
             { "Break", 5, 500},
             { "KnightMob", 20, 500 },
             { "Gyrocopter", 1, 500 },
         },
         {
             { "KnightMob", 5, 500 },
-            { "Gyrocopter", 1, 500 },
+            { "GriffonRider", 1, 500 },
             { "Break", 5, 500},
-            { "Gyrocopter", 3, 500 },
+            { "Gyrocopter", 2, 500 },
         },
         {
-            { "Gyrocopter", 5, 500 },
+            { "GriffonRider", 5, 500 },
             { "Break", 5, 500},
             { "Mob", 10, 500 },
             { "Gyrocopter", 15, 500 },
@@ -274,10 +274,14 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 			{ "Devourer",5,400},
 		},
 		{
-			{ "Mob", 20 },
+			{ "Mob", 5 },
+            { "Dragon", 10, 600},
+            { "Devourer",10,400},
 			{"Break", 5, 200},
 			//take a break in between
-			{ "Mob", 30 },
+			{ "Mob", 10 },
+            { "Devourer",10,400},
+
 		},
 		{
 			{ "Gyrocopter", 30 , 500},
@@ -285,14 +289,14 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
         {
             { "Gyrocopter", 10 , 500},
             { "Mob", 10 , 500},
-            { "Gyrocopter", 10 , 500},
+            { "Devourer", 10 , 500},
             { "Gyrocopter", 30 , 500},
         },
         {
             { "Gyrocopter", 20 , 500},
             { "Mob", 20 , 500},
             { "Gyrocopter", 30 , 500},
-            { "Gyrocopter", 50 , 500},
+            { "Dragon", 50 , 500},
             { "Mob", 100 , 500},
         },
         {
