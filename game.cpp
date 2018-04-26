@@ -99,11 +99,14 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 	backgroundMusic.setLoop(true);
 
 	//Sound Effects
-	sf::SoundBuffer s1, s2, s3, s4, s5;
-	SoundFx sfx1(s1);
-	SoundFx sfx2(s2);
-	bool load1 = true, load2 = true, load3 = true, load4 = true, load5 = true;
-
+	sf::SoundBuffer s1, s2, s3, s4, s5, s6;
+	SoundFx explosion(s1);
+	SoundFx pulse(s2);
+	SoundFx click(s3);
+	SoundFx warning1(s4);
+	SoundFx warning2(s5);
+	SoundFx sold(s6);
+	bool load1 = true, load2 = true, load3 = true, load4 = true, load5 = true, load6 = true;
 
     //Font
     sf::Font font;
@@ -376,7 +379,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 				ifNear = mobsThisRound.detectBox(m.x,m.y, 192, 192);
 				timeDelay = towers[i]->getClock();
 				if (ifNear && (timeDelay.asSeconds() >= 2)) {
-					sfx2.pulse(load2);
+					pulse.pulseFx(load2);
 					load2 = false;
 					//if mobs are nearby and it has been 2 seconds since the tower has fired
 					towers[i]->restartClock();
@@ -471,9 +474,9 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
 			}
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num1) {
-                
+				click.uiEffect(load3);
+				load3 = false;
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
-                
 				if (thePlayer.getGold() >= 150) {
 					if (boo.size() < 1) {
 						boo.push_back(std::make_unique<Ghost>(worldPos.x, worldPos.y));
@@ -490,8 +493,14 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                             
                             thePlayer.setGold(thePlayer.getGold() - 150);
                         }
+						else {
+							warning1.uiNopeFx(load4);
+							load4 = false;
+						}
                     }
 				} else {
+					warning2.uiNopeFx(load5);
+					load5 = false;
 					cout << "not enough gold, " << 150 - thePlayer.getGold() << " more gold required!"  << endl;
 				}
 			}
@@ -513,6 +522,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                                 
                                 bool ifFound = towers.findTowerByPointer(clickableTower, iterValue);
                                 if (ifFound) {
+									sold.sellTowerFx(load6);
+									load6 = false;
                                     cout << "Tower Sold" << endl;
                                     towers.deleteTower(iterValue);
                                     thePlayer.setGold(thePlayer.getGold() + 60);
@@ -557,6 +568,8 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 				int iterValue;
 				bool ifFound = towers.findTower(m,iterValue);
 				if (ifFound) {
+					sold.sellTowerFx(load6);
+					load6 = false;
 					cout << "Tower Sold" << endl;
 					towers.deleteTower(iterValue);
 					thePlayer.setGold(thePlayer.getGold() + 60);
@@ -593,7 +606,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             
             //DEBUG: figure out pixel x,y location of click
             if (event.type == sf::Event::MouseButtonPressed) {
-				sfx1.explosion(load1);
+				explosion.explosionFx(load1);
 				load1 = false;
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
 				if ((timer.getElapsedTime() - explosionCooldown).asMilliseconds() >= 500) {
