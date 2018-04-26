@@ -5,11 +5,11 @@
 #ifndef TOWER_HPP_
 #define TOWER_HPP_
 
-#include "Wave.h"
 #include "clickable.hpp"
 #include "Player.hpp"
 #include <memory>
 #include <vector>
+#include "Wave.h"
 
 
 class Tower : public sf::Sprite, public Clickable {
@@ -26,7 +26,7 @@ public:
 	int getType() const;
     sf::Sprite _getSprite();
     sf::CircleShape getThisGhost();
-    void upgrade();
+    bool upgrade();
     sf::FloatRect getCollisionBox();
     void sell(const std::vector<std::shared_ptr<Tower>> &towers);
 

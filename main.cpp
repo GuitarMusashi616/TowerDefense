@@ -8,6 +8,7 @@
 #include "screens.hpp"
 #include "game.hpp"
 #include "menu.hpp"
+#include "GameOver.hpp"
 #include "framework.hpp"
 
 using std::cout;
@@ -15,11 +16,6 @@ using std::cin;
 using std::endl;
 using std::vector;
 using std::string;
-
-string resourcePath() {
-	//comment out if on mac!
-	return "Resources/";
-}
 
 int main()
 {
@@ -41,7 +37,7 @@ int main()
     screens.push_back(&screen1);
 
 	//GameOver 
-	MenuScreen screen2;
+	GameOver screen2;
 	screens.push_back(&screen2);
 
     int screen = 0;

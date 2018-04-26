@@ -110,7 +110,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 
     //Font
     sf::Font font;
-    font.loadFromFile(resourcePath() + "OpenSans-Regular.ttf");
+    font.loadFromFile("OpenSans-Regular.ttf");
 
     //Clickable Texts
     
@@ -232,31 +232,73 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 	//};
 
 	vector < vector<creep> > mobOrder{
-		//{
-		//	{ "Footman", 5, 500 },
-		//},
-		//{
-		//	{ "Footman", 10, 500 },
-		//	{ "Break", 5, 500},
-		//	{ "KnightMob", 5, 500 },
-		//},
+        {
+            {"Footman", 5, 500},
+            {"Footman", 5, 500}
+
+        },
+		{
+			{ "Footman", 10, 500 },
+            { "KnightMob", 5, 500 },
+		},
+		{
+			{ "Footman", 5, 500 },
+			{ "Break", 5, 500},
+			{ "KnightMob", 15, 500 },
+		},
+        {
+            { "Footman", 5, 500 },
+            { "Break", 5, 500},
+            { "KnightMob", 20, 500 },
+            { "Gyrocopter", 1, 500 },
+        },
+        {
+            { "KnightMob", 5, 500 },
+            { "Gyrocopter", 1, 500 },
+            { "Break", 5, 500},
+            { "Gyrocopter", 3, 500 },
+        },
+        {
+            { "Gyrocopter", 5, 500 },
+            { "Break", 5, 500},
+            { "Mob", 10, 500 },
+            { "Gyrocopter", 15, 500 },
+
+        },
 		{
 			{ "KnightMob", 5, 500},
 			{ "Break", 5, 200},
-			{ "Gyrocopter", 3, 700},
+			{ "Gyrocopter", 15, 700},
 			{ "Footman", 10, 200 },
 			//{ "Break", 10, 200},
-			{ "GriffonRider", 5, 800},
+			{ "GriffonRider", 20, 800},
 		},
 		{
-			{ "Footman", 20 },
+			{ "Mob", 20 },
 			{"Break", 5, 200},
 			//take a break in between
-			{ "KnightMob", 10 },
+			{ "Mob", 30 },
 		},
 		{
-			{ "Mob", 5, 500},
+			{ "Gyrocopter", 30 , 500},
 		},
+        {
+            { "Gyrocopter", 10 , 500},
+            { "Mob", 10 , 500},
+            { "Gyrocopter", 10 , 500},
+            { "Gyrocopter", 30 , 500},
+        },
+        {
+            { "Gyrocopter", 20 , 500},
+            { "Mob", 20 , 500},
+            { "Gyrocopter", 30 , 500},
+            { "Gyrocopter", 50 , 500},
+            { "Mob", 100 , 500},
+        },
+        {
+            { "Mob", 200 , 500},
+        }
+
 	};
 
 	Wave mobsThisRound;
@@ -379,12 +421,14 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 				ifNear = mobsThisRound.detectBox(m.x,m.y, 192, 192);
 				timeDelay = towers[i]->getClock();
 				if (ifNear && (timeDelay.asSeconds() >= 2)) {
-					pulse.pulseFx(load2);
+					pulse.pulse(load2);
 					load2 = false;
 					//if mobs are nearby and it has been 2 seconds since the tower has fired
 					towers[i]->restartClock();
 					animations.push_back(std::make_unique<ArcaneExplosion>(t5, sf::Vector2i{ int(m.x),int(m.y) }));
-					mobsThisRound.killCircle(m.x, m.y, 96.);
+                    for(auto a = 0; a < towers[i]->getType() + 1; a++) {
+                        mobsThisRound.killCircle(m.x, m.y, 100.);
+                    }
 				}
 			}
         }
@@ -494,12 +538,12 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                             thePlayer.setGold(thePlayer.getGold() - 150);
                         }
 						else {
-							warning1.uiNopeFx(load4);
+							warning1.uiEffect(load4);
 							load4 = false;
 						}
                     }
 				} else {
-					warning2.uiNopeFx(load5);
+					warning2.uiEffect(load5);
 					load5 = false;
 					cout << "not enough gold, " << 150 - thePlayer.getGold() << " more gold required!"  << endl;
 				}
@@ -508,21 +552,21 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             if(event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
                 bool clickedClickable = false;
-                for(const auto &item : menu) {
-                    if(item.getGlobalBounds().contains(worldPos.x, worldPos.y)) {
+                for(auto i = 0; i < menu.size(); i ++) {
+                    if(menu[i].getGlobalBounds().contains(worldPos.x, worldPos.y)) {
                         
                         if(selectGhost.getRadius()) {
                             
                             shared_ptr<Clickable> clickable = Clickable::getSelected();
                             shared_ptr<Tower> clickableTower = std::static_pointer_cast<Tower>(clickable);
 
-                            if(item.getString() == "Sell") {
+                            if(i == 0) {
                                
                                 int iterValue;
                                 
                                 bool ifFound = towers.findTowerByPointer(clickableTower, iterValue);
                                 if (ifFound) {
-									sold.sellTowerFx(load6);
+									sold.sellTower(load6);
 									load6 = false;
                                     cout << "Tower Sold" << endl;
                                     towers.deleteTower(iterValue);
@@ -532,11 +576,20 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                                 else {
                                     cout << "No Tower Selected" << endl;
                                 }
-                                
-                                cout << "Tower: " << Clickable::getSelected() << endl;
                             }
-                            if(item.getString() == "Upgrade") {
-                                clickableTower->upgrade();
+                            if(i == 1) {
+                                int upgradeCost = 100 + (100 * clickableTower->getType());
+                                if(thePlayer.getGold() >= upgradeCost) {
+                                    if(!clickableTower->upgrade()) {
+                                        //Warning Sound
+                                        cout << "Tower at max upgrade!" << endl;
+                                    } else {
+                                        cout << "removed gold" << endl;
+                                        thePlayer.setGold(thePlayer.getGold() - upgradeCost);
+                                    }
+                                } else {
+                                    cout << "You need " << upgradeCost << " gold to upgrade!" << endl;
+                                }
                             }
                             clickedClickable = true;
                         }
@@ -546,8 +599,11 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
                     if(t->getGlobalBounds().contains(worldPos.x, worldPos.y)) {
                         t->onClick();
                         selectGhost = t->getThisGhost();
-                        //selectGhost.setOrigin(t->getPosition().x, t->getPosition().y);
                         selectGhost.setRadius(100);
+                        int upgradeCost = 100 + (100 * t->getType());
+                        stringstream upgradeText;
+                        upgradeText << "Upgrade (" << upgradeCost << "): " << endl;
+                        menu[1].setString(upgradeText.str());
                         clickedClickable = true;
                     }
                 }
@@ -568,7 +624,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 				int iterValue;
 				bool ifFound = towers.findTower(m,iterValue);
 				if (ifFound) {
-					sold.sellTowerFx(load6);
+					sold.sellTower(load6);
 					load6 = false;
 					cout << "Tower Sold" << endl;
 					towers.deleteTower(iterValue);
@@ -606,7 +662,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             
             //DEBUG: figure out pixel x,y location of click
             if (event.type == sf::Event::MouseButtonPressed) {
-				explosion.explosionFx(load1);
+				explosion.explosion(load1);
 				load1 = false;
                 sf::Vector2f worldPos = app.mapPixelToCoords(sf::Mouse::getPosition(app));
 				if ((timer.getElapsedTime() - explosionCooldown).asMilliseconds() >= 500) {
@@ -658,7 +714,7 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             }
         } else {
             for (auto & item : menu) {
-                item.setFillColor(sf::Color(0,0,0,40));
+                item.setFillColor(sf::Color(0,0,0,20));
             }
         }
         for (const auto &a : animations) {
@@ -676,10 +732,6 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
             app.draw(item);
             //Drawing item
         }
-        
-       
-
-        
         
         if(showCollisionBoxes) {
             for (auto &b : pathCollision) {
