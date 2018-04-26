@@ -7,7 +7,7 @@
 Tower::Tower() : _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero } {
 }
 
-Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _position{ pos }, _texture{ texture }, _lastTime{ sf::Time::Zero }, _towerTypes{
+Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _position{ pos }, _texture{ texture }, _lastTime{ sf::Time::Zero }, _type{ 0 }, _towerTypes {
 	{275,100,82,119},
 	{353,101,76,119},
 	{429,144,76,72},
@@ -74,7 +74,13 @@ void Tower::setActive() {
 void Tower::setTowerType(int numType)
 {
 	setTextureRect(_towerTypes[numType]);
+	_type = numType;
 	//might need to update too
+}
+
+int Tower::getType() const
+{
+	return _type;
 }
 
 bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &position)
@@ -93,14 +99,17 @@ bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &
 ArcherTower::ArcherTower(const sf::Texture &texture, const sf::Vector2i &position) : Tower{texture,position}
 {
 	setTextureRect(_towerTypes[1]);
+	_type = 1;
 }
 
 CannonTower::CannonTower(const sf::Texture &, const sf::Vector2i &)
 {
 	setTextureRect(_towerTypes[2]);
+	_type = 2;
 }
 
 CrossbowTower::CrossbowTower(const sf::Texture &, const sf::Vector2i &)
 {
 	setTextureRect(_towerTypes[3]);
+	_type = 3;
 }

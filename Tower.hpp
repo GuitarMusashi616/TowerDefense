@@ -21,6 +21,7 @@ public:
     void onClick();
     void setActive();
 	void setTowerType(int);
+	int getType() const;
     sf::Sprite _getSprite();
     sf::CircleShape getThisGhost();
 protected:
@@ -31,6 +32,7 @@ protected:
 	sf::Clock _timer;
 	sf::Time _lastTime;
 	std::vector<sf::IntRect> _towerTypes;
+	int _type;
 };
 
 class ArcherTower : public Tower {
