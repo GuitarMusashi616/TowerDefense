@@ -3,12 +3,13 @@
 #include <iostream>
 #include "Tower.hpp"
 #include <memory>
+#include "Player.hpp"
 
 Tower::Tower() : _rect{ 275,100,82,119 }, _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero }, _collisionBounds{275,100,82,119} {
 	setOrigin(41, 60);
 }
 
-Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _position{ pos }, _texture{ texture }, _lastTime{ sf::Time::Zero }, _type{ 0 }, _towerTypes {
+Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _position{ pos }, _texture{ texture }, _lastTime{ sf::Time::Zero },  _collisionBounds{275,100,82,119},  _towerTypes{
 	{275,100,82,119},
 	{353,101,76,119},
 	{429,144,76,72},
@@ -72,6 +73,15 @@ void Tower::setActive() {
     Clickable::select(shared_from_this());
 }
 
+sf::FloatRect Tower::getCollisionBox() {
+    _collisionBounds = this->getGlobalBounds();
+    _collisionBounds.height = 80;
+    _collisionBounds.width = 75;
+    _collisionBounds.top = _collisionBounds.top + 40;
+    return _collisionBounds;
+}
+
+
 void Tower::setTowerType(int numType)
 {
 	setTextureRect(_towerTypes[numType]);
@@ -82,6 +92,11 @@ void Tower::setTowerType(int numType)
 int Tower::getType() const
 {
 	return _type;
+}
+
+void Tower::upgrade() {
+    this->setTowerType(1);
+    std::cout << "Tower Upgraded" << std::endl;
 }
 
 bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &position)
