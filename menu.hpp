@@ -13,5 +13,4 @@ class MenuScreen : public Screens
     int run(sf::RenderWindow &app, const Framework & framework);
 };
 
-
 #endif /* screen_0_hpp */

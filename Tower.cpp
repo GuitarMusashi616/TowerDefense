@@ -4,7 +4,8 @@
 #include "Tower.hpp"
 #include <memory>
 
-Tower::Tower() : _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero } {
+Tower::Tower() : _rect{ 275,100,82,119 }, _position{ sf::Vector2i{0,0} }, _lastTime{ sf::Time::Zero }, _collisionBounds{275,100,82,119} {
+	setOrigin(41, 60);
 }
 
 Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _position{ pos }, _texture{ texture }, _lastTime{ sf::Time::Zero }, _type{ 0 }, _towerTypes {

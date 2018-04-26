@@ -1,4 +1,4 @@
-#include "Towers.hpp"
+#include "Towers.h"
 
 bool Towers::findTower(const sf::Vector2i & position, int &iteratorValue) const
 {
@@ -14,8 +14,19 @@ bool Towers::findTower(const sf::Vector2i & position, int &iteratorValue) const
 	return false;
 }
 
+bool Towers::findTowerByPointer(const std::shared_ptr<Tower> & tower, int & iteratorValue) const {
+    for (auto i = 0; i < size(); i++) {
+        if(this->at(i) == tower) {
+            iteratorValue = i;
+            return true;
+        }
+    }
+        return false;
+}
+
 void Towers::deleteTower(const int iteratorValue)
 {
 	this->at(iteratorValue).reset();
+    
 	erase(begin() + iteratorValue);
 }
