@@ -9,12 +9,23 @@ Tower::Tower() : _rect{ 275,100,82,119 }, _position{ sf::Vector2i{0,0} }, _lastT
 	setOrigin(41, 60);
 }
 
-Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _rect{ 275,100,82,119 }, _position{ pos }, _texture{texture}, _lastTime{ sf::Time::Zero }, _collisionBounds{275,100,82,119}
+Tower::Tower(const sf::Texture &texture, const sf::Vector2i &pos) : _position{ pos }, _texture{ texture }, _lastTime{ sf::Time::Zero },  _collisionBounds{275,100,82,119},  _towerTypes{
+	{275,100,82,119},
+	{353,101,76,119},
+	{429,144,76,72},
+	{502,134,76,83},
+	{576,102,81,11},
+	{279,221,73,100},
+	{355,236,73,84},
+	{431,216,73,101},
+	{503,215,73,98},
+	{581,215,71,104},
+}
 {
 	setTexture(_texture);
 	setPosition(_position);
-	setTextureRect(_rect);
-	setOrigin(41, 60);
+	setTextureRect(_towerTypes[0]);
+	setOrigin(_towerTypes[0].width/2, _towerTypes[0].height/2);
 }
 
 Tower::~Tower(){
@@ -71,24 +82,15 @@ sf::FloatRect Tower::getCollisionBox() {
 }
 
 
-sf::IntRect & Tower::getIntRect()
+void Tower::setTowerType(int numType)
 {
-	return _rect;
+	setTextureRect(_towerTypes[numType]);
+	//might need to update too
 }
 
 void Tower::upgrade() {
+    this->setTowerType(1);
     std::cout << "Tower Upgraded" << std::endl;
-    auto &intRect = this->getIntRect();
-    //275, 100 original position for default tower in towers.png image
-    //size of all 10 towers fit in a 380 by 214 box
-    if (intRect.left < 380 + 275) {
-        intRect.left += 76;
-    } else if (intRect.top < 100 + 107) {
-        intRect.left = 275;
-        intRect.top += 107;
-    }
-    //how many pixels over to the next tower in the towers.png image
-    this->setTextureRect(intRect);
 }
 
 
@@ -103,4 +105,19 @@ bool findTower(const std::vector<std::shared_ptr<Tower>> &towers, sf::Vector2i &
 		}
 	}
 	return false;
+}
+
+ArcherTower::ArcherTower(const sf::Texture &texture, const sf::Vector2i &position) : Tower{texture,position}
+{
+	setTextureRect(_towerTypes[1]);
+}
+
+CannonTower::CannonTower(const sf::Texture &, const sf::Vector2i &)
+{
+	setTextureRect(_towerTypes[2]);
+}
+
+CrossbowTower::CrossbowTower(const sf::Texture &, const sf::Vector2i &)
+{
+	setTextureRect(_towerTypes[3]);
 }

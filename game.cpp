@@ -556,17 +556,18 @@ int GameScreen::run(sf::RenderWindow & app, const Framework & framework) {
 				bool ifFound = towers.findTower(m, iterValue);
 				if (ifFound) {
 					cout << "Tower Upgraded" << endl;
-					auto &intRect = towers[iterValue]->getIntRect();
+					towers[iterValue]->setTowerType(5);
+					//auto &intRect = towers[iterValue]->getIntRect();
 					//275, 100 original position for default tower in towers.png image
 					//size of all 10 towers fit in a 380 by 214 box
-					if (intRect.left < 380 + 275) {
-						intRect.left += 76;
-					} else if (intRect.top < 100 + 107) {
-						intRect.left = 275;
-						intRect.top += 107;
-					}
+					//if (intRect.left < 380 + 275) {
+					//	intRect.left += 76;
+					//} else if (intRect.top < 100 + 107) {
+					//	intRect.left = 275;
+					//	intRect.top += 107;
+					//}
 					//how many pixels over to the next tower in the towers.png image
-					towers[iterValue]->setTextureRect(intRect);
+					//towers[iterValue]->setTextureRect(intRect);
 				}
 				else {
 					cout << "No Tower Selected" << endl;
