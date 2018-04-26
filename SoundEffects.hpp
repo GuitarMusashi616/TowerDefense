@@ -10,12 +10,13 @@ class SoundFx {
 public:
 	SoundFx();
 	SoundFx(const sf::SoundBuffer &);
-	void explosion(bool);
-	void pulse(bool);
+	void explosionFx(bool);
+	void pulseFx(bool);
 	void uiEffect(bool);
-	void sellTower(bool);
-	void marching(bool);
-	void gameOver();
+	void sellTowerFx(bool);
+	void marchingFx(bool);
+	void uiNopeFx(bool);
+	void gameOverFx();
 private:
 	sf::Sound _sound;
 	sf::SoundBuffer _buffer;
